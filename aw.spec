@@ -116,6 +116,7 @@ aw_server_a = build_analysis(
     aws_location,
     datas=[
         (aws_location / "aw_server/static", "aw_server/static"),
+        (aws_location / "aw_server/checkins_data", "aw_server/checkins_data"),
         (restx_path / "templates", "flask_restx/templates"),
         (restx_path / "static", "flask_restx/static"),
         (aw_core_path / "schemas", "aw_core/schemas"),
