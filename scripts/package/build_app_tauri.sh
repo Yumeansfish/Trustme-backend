@@ -4,8 +4,8 @@ set -e
 # Build a macOS .app bundle for the Tauri-based ActivityWatch.
 # This replaces the PyInstaller-based bundling used by aw-qt.
 
-APP_NAME="ActivityWatch"
-BUNDLE_ID="net.activitywatch.ActivityWatch"
+APP_NAME="trust-me"
+BUNDLE_ID="io.github.yumeansfish.trustme"
 VERSION="0.1.0"
 ICON_PATH="aw-tauri/src-tauri/icons/icon.icns"
 
@@ -80,7 +80,7 @@ cat > "dist/${APP_NAME}.app/Contents/Info.plist" << EOF
     <key>CFBundleVersion</key>
     <string>${VERSION}</string>
     <key>NSAppleEventsUsageDescription</key>
-    <string>ActivityWatch needs access to monitor application usage</string>
+    <string>trust-me needs access to monitor application usage</string>
     <key>NSHighResolutionCapable</key>
     <true/>
     <key>NSPrincipalClass</key>

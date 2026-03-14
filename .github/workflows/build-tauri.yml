@@ -149,18 +149,18 @@ jobs:
           fi
 
           source venv/bin/activate
-          make dist/ActivityWatch.dmg
+          make dist/trust-me.dmg
 
           if [ -n "$APPLE_EMAIL" ]; then
-            codesign --verbose -s ${APPLE_PERSONALID} dist/ActivityWatch.dmg
+            codesign --verbose -s ${APPLE_PERSONALID} dist/trust-me.dmg
 
             brew install akeru-inc/tap/xcnotary
-            xcnotary precheck dist/ActivityWatch.app
-            xcnotary precheck dist/ActivityWatch.dmg
+            xcnotary precheck dist/trust-me.app
+            xcnotary precheck dist/trust-me.dmg
 
             make dist/notarize
           fi
-          mv dist/ActivityWatch.dmg dist/activitywatch-$(scripts/package/getversion.sh)-macos-x86_64.dmg
+          mv dist/trust-me.dmg dist/trust-me-$(scripts/package/getversion.sh)-macos-x86_64.dmg
         env:
           APPLE_EMAIL: ${{ secrets.APPLE_EMAIL }}
           APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}

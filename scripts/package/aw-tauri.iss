@@ -1,13 +1,13 @@
-; Inno Setup script for ActivityWatch (Tauri edition)
+; Inno Setup script for trust-me (Tauri edition)
 ;
 ; This is separate from activitywatch-setup.iss (aw-qt) to avoid
 ; installation collisions. Uses a different AppId, install directory,
 ; and display name.
 
-#define MyAppName "ActivityWatch (Tauri)"
+#define MyAppName "trust-me (Tauri)"
 #define MyAppVersion GetEnv('AW_VERSION')
-#define MyAppPublisher "ActivityWatch Contributors"
-#define MyAppURL "https://activitywatch.net/"
+#define MyAppPublisher "trust-me"
+#define MyAppURL "https://yumeansfish.github.io/Trustme-backend/"
 #define MyAppExeName "aw-tauri.exe"
 #define RootDir "..\.."
 #define DistDir "..\..\dist"
@@ -22,9 +22,9 @@ AppVersion={#MyAppVersion}
 AppVerName={#MyAppName} {#MyAppVersion}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
-AppSupportURL="https://github.com/ActivityWatch/activitywatch/issues"
-AppUpdatesURL="https://github.com/ActivityWatch/activitywatch/releases"
-DefaultDirName={autopf}\ActivityWatch-Tauri
+AppSupportURL="https://github.com/Yumeansfish/Trustme-backend/issues"
+AppUpdatesURL="https://github.com/Yumeansfish/Trustme-backend/releases"
+DefaultDirName={autopf}\trust-me-tauri
 DisableProgramGroupPage=yes
 PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
@@ -42,7 +42,7 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
-Name: "StartMenuEntry" ; Description: "Start ActivityWatch when Windows starts"; GroupDescription: "Windows Startup"; MinVersion: 4,4;
+Name: "StartMenuEntry" ; Description: "Start trust-me when Windows starts"; GroupDescription: "Windows Startup"; MinVersion: 4,4;
 
 [Files]
 Source: "{#DistDir}\activitywatch\aw-tauri.exe"; DestDir: "{app}\aw-tauri"; Flags: ignoreversion

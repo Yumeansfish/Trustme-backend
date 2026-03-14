@@ -229,9 +229,9 @@ if platform.system() == "Darwin":
     
     app = BUNDLE(
         *bundle_args,
-        name="ActivityWatch.app",
+        name="trust-me.app",
         icon=icon,
-        bundle_identifier="net.activitywatch.ActivityWatch",
+        bundle_identifier="io.github.yumeansfish.trustme",
         version=current_release.lstrip("v"),
         info_plist={
             "NSPrincipalClass": "NSApplication",

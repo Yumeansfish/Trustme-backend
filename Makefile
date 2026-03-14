@@ -1,5 +1,5 @@
 # =====================================
-# Makefile for the ActivityWatch bundle
+# Makefile for the trust-me bundle
 # =====================================
 #
 # [GUIDE] How to install from source:
@@ -166,17 +166,17 @@ aw-qt/media/logo/logo.icns:
 	rm -R build/MyIcon.iconset
 	mv build/MyIcon.icns aw-qt/media/logo/logo.icns
 
-dist/ActivityWatch.app: aw-qt/media/logo/logo.icns
+dist/trust-me.app: aw-qt/media/logo/logo.icns
 ifeq ($(TAURI_BUILD),true)
 	scripts/package/build_app_tauri.sh
 else
 	pyinstaller --clean --noconfirm aw.spec
 endif
 
-dist/ActivityWatch.dmg: dist/ActivityWatch.app
+dist/trust-me.dmg: dist/trust-me.app
 	# NOTE: This does not codesign the dmg, that is done in the CI config
 	pip install dmgbuild
-	dmgbuild -s scripts/package/dmgbuild-settings.py -D app=dist/ActivityWatch.app "ActivityWatch" dist/ActivityWatch.dmg
+	dmgbuild -s scripts/package/dmgbuild-settings.py -D app=dist/trust-me.app "trust-me" dist/trust-me.dmg
 
 dist/notarize:
 	./scripts/notarize.sh
