@@ -1,5 +1,11 @@
 <img title="ActivityWatch" src="https://activitywatch.net/img/banner.png" align="center">
 
+> Trustme download page: https://yumeansfish.github.io/Trustme-backend/
+>
+> Direct macOS downloads:
+> - Stable: https://github.com/Yumeansfish/Trustme-backend/releases/download/latest/trustme-stable-macos.dmg
+> - Latest: https://github.com/Yumeansfish/Trustme-backend/releases/download/latest/trustme-latest-macos.dmg
+
 <p align="center">
   <b>Records what you do</b> so that you can <i>know how you've spent your time</i>.
   <br>
@@ -273,4 +279,3 @@ Want to help? Great! Check out the [CONTRIBUTING.md file](./CONTRIBUTING.md)!
 ## Questions and support
 
 Have a question, suggestion, problem, or just want to say hi? Post on [the forum](https://forum.activitywatch.net/)!
-
