@@ -56,7 +56,10 @@ def main():
         log_file=True,
     )
 
-    if sys.platform == "darwin":
+    # On macOS with the swift strategy, the native helper performs the actual
+    # accessibility prompt. Triggering the Python-side reminder as well causes
+    # duplicate permission dialogs even when the app is already authorized.
+    if sys.platform == "darwin" and args.strategy != "swift":
         background_ensure_permissions()
 
     client = ActivityWatchClient(
