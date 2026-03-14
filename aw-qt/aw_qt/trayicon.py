@@ -74,7 +74,7 @@ def open_webui(root_url: str) -> None:
 
 def open_apibrowser(root_url: str) -> None:
     print("Opening api browser")
-    open_url(root_url + "/api")
+    open_url(root_url.rstrip("/") + "/api/")
 
 
 def open_dir(d: str) -> None:
