@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trustme</title>
+    <meta
+      name="description"
+      content="Trustme bundles the dashboard, local backend, and desktop app into a single macOS download."
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero">
+        <div class="hero-copy">
+          <span class="eyebrow">Trustme</span>
+          <h1>Download the full desktop build.</h1>
+          <p class="lede">
+            One macOS app. Dashboard, local backend, and background watchers
+            are packaged together.
+          </p>
+          <div class="actions">
+            <a
+              class="button button-primary"
+              href="https://github.com/Yumeansfish/Trustme-backend/releases/latest/download/trustme-stable-macos.dmg"
+            >
+              Download Stable
+            </a>
+            <a
+              class="button button-secondary"
+              href="https://github.com/Yumeansfish/Trustme-backend/releases/download/latest/trustme-latest-macos.dmg"
+            >
+              Download Latest
+            </a>
+          </div>
+          <p class="hint">
+            Stable tracks the latest tagged release. Latest follows the newest
+            preview build from <code>main</code>.
+          </p>
+        </div>
+        <div class="hero-card">
+          <div class="hero-card-header">
+            <span class="status-dot"></span>
+            <span class="status-label">Local-first desktop runtime</span>
+          </div>
+          <div class="feature-grid">
+            <article class="feature-card">
+              <span class="feature-icon">D</span>
+              <h2>Dashboard</h2>
+              <p>Refined activity views, check-ins, privacy controls, and raw data tools.</p>
+            </article>
+            <article class="feature-card">
+              <span class="feature-icon">S</span>
+              <h2>Snapshot Backend</h2>
+              <p>Persistent summary DTOs keep week, month, and year views warm.</p>
+            </article>
+            <article class="feature-card">
+              <span class="feature-icon">W</span>
+              <h2>Watchers Included</h2>
+              <p>Window, AFK, browser, and desktop watchers ship in the same app bundle.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="notes">
+        <article class="note-card">
+          <h3>Stable</h3>
+          <p>Recommended for participants and general use.</p>
+        </article>
+        <article class="note-card">
+          <h3>Latest</h3>
+          <p>Recommended when you want the newest frontend and release workflow output.</p>
+        </article>
+        <article class="note-card">
+          <h3>License</h3>
+          <p>Distributed under MPL-2.0 with source available in the GitHub repositories.</p>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

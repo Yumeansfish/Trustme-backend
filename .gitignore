@@ -1,6 +1,8 @@
 build
 dist
-docs
+**/docs/**
+!docs
+!docs/**
 other
 old
 
