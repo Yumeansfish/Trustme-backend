@@ -20,8 +20,10 @@ from aw_query import query2
 from aw_transform import heartbeat_merge
 
 from .__about__ import __version__
+from .dashboard_summary_store import SummarySnapshotStore
 from .exceptions import NotFound
 from .settings import Settings
+from .summary_snapshot import build_summary_snapshot
 
 logger = logging.getLogger(__name__)
 
@@ -54,6 +56,7 @@ class ServerAPI:
         self.settings = Settings(testing)
         self.testing = testing
         self.last_event = {}  # type: dict
+        self.summary_snapshot_store = SummarySnapshotStore(testing=testing)
 
     def get_info(self) -> Dict[str, Any]:
         """Get server info"""
@@ -347,6 +350,35 @@ class ServerAPI:
             query = "".join(query)
             result.append(query2.query(name, query, starttime, endtime, self.db))
         return result
+
+    def summary_snapshot(
+        self,
+        *,
+        range_start: datetime,
+        range_end: datetime,
+        category_periods: List[str],
+        window_buckets: List[str],
+        afk_buckets: List[str],
+        stopwatch_buckets: List[str],
+        filter_afk: bool,
+        categories: List[Any],
+        filter_categories: List[List[str]],
+        always_active_pattern: str = "",
+    ) -> Dict[str, Any]:
+        return build_summary_snapshot(
+            self.db,
+            range_start=range_start,
+            range_end=range_end,
+            category_periods=category_periods,
+            window_buckets=window_buckets,
+            afk_buckets=afk_buckets,
+            stopwatch_buckets=stopwatch_buckets,
+            filter_afk=filter_afk,
+            categories=categories,
+            filter_categories=filter_categories,
+            always_active_pattern=always_active_pattern,
+            store=self.summary_snapshot_store,
+        )
 
     # TODO: Right now the log format on disk has to be JSON, this is hard to read by humans...
     def get_log(self):

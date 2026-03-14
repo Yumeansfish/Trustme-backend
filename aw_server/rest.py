@@ -101,6 +101,24 @@ query = api.model(
 )
 
 
+summary_snapshot_query = api.model(
+    "SummarySnapshotQuery",
+    {
+        "range": fields.Raw(required=True, description="ISO start/end execution range"),
+        "category_periods": fields.List(
+            fields.String, required=True, description="Logical periods for by_period aggregation"
+        ),
+        "window_buckets": fields.List(fields.String, required=True),
+        "afk_buckets": fields.List(fields.String, required=True),
+        "stopwatch_buckets": fields.List(fields.String, required=False),
+        "filter_afk": fields.Boolean(required=False),
+        "categories": fields.Raw(required=False),
+        "filter_categories": fields.Raw(required=False),
+        "always_active_pattern": fields.String(required=False),
+    },
+)
+
+
 def copy_doc(api_method):
     """Decorator that copies another functions docstring to the decorated function.
     Used to copy the docstrings in ServerAPI over to the flask-restplus Resources.
@@ -324,6 +342,36 @@ class QueryResource(Resource):
         except QueryException as qe:
             traceback.print_exc()
             return {"type": type(qe).__name__, "message": str(qe)}, 400
+
+
+@api.route("/0/dashboard/summary-snapshot")
+class SummarySnapshotResource(Resource):
+    @api.expect(summary_snapshot_query, validate=False)
+    def post(self):
+        data = request.get_json() or {}
+        range_payload = data.get("range") or {}
+        try:
+            range_start = iso8601.parse_date(range_payload["start"])
+            range_end = iso8601.parse_date(range_payload["end"])
+        except Exception:
+            raise BadRequest(
+                "InvalidSummarySnapshotRange",
+                "Missing or invalid summary snapshot range payload",
+            )
+
+        result = current_app.api.summary_snapshot(
+            range_start=range_start,
+            range_end=range_end,
+            category_periods=data.get("category_periods") or [],
+            window_buckets=data.get("window_buckets") or [],
+            afk_buckets=data.get("afk_buckets") or [],
+            stopwatch_buckets=data.get("stopwatch_buckets") or [],
+            filter_afk=bool(data.get("filter_afk", True)),
+            categories=data.get("categories") or [],
+            filter_categories=data.get("filter_categories") or [],
+            always_active_pattern=data.get("always_active_pattern") or "",
+        )
+        return jsonify(result)
 
 
 # EXPORT AND IMPORT
