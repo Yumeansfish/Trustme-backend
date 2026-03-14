@@ -1,0 +1,149 @@
+name: Build and Release
+
+on:
+  push:
+    branches: [main]
+    tags:
+      - 'v*'
+  repository_dispatch:
+    types: [frontend-updated]
+  workflow_dispatch:
+    inputs:
+      frontend_ref:
+        description: Frontend git ref or SHA to package
+        required: false
+        default: main
+
+concurrency:
+  group: build-${{ github.workflow }}-${{ github.ref_name || github.run_id }}
+  cancel-in-progress: false
+
+jobs:
+  macos-build:
+    runs-on: macos-14
+    permissions:
+      contents: write
+    env:
+      AW_EXTRAS: true
+      MACOSX_DEPLOYMENT_TARGET: '10.9'
+      FRONTEND_REPOSITORY: Yumeansfish/dashboard
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Resolve frontend ref
+        id: frontend
+        env:
+          INPUT_FRONTEND_REF: ${{ github.event.inputs.frontend_ref }}
+          PAYLOAD_FRONTEND_REF: ${{ github.event.client_payload.frontend_ref }}
+        run: |
+          ref="${PAYLOAD_FRONTEND_REF:-${INPUT_FRONTEND_REF:-main}}"
+          echo "ref=$ref" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ env.FRONTEND_REPOSITORY }}
+          ref: ${{ steps.frontend.outputs.ref }}
+          path: frontend-source
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+
+      - name: Cache frontend node_modules
+        uses: actions/cache@v4
+        with:
+          path: frontend-source/node_modules
+          key: ${{ runner.os }}-frontend-${{ hashFiles('frontend-source/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-frontend-
+
+      - name: Cache cargo build
+        uses: actions/cache@v4
+        with:
+          path: aw-server-rust/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+
+      - name: Install Python tooling
+        run: pip3 install poetry==1.4.2
+
+      - name: Build frontend and sync static assets
+        run: ./scripts/release/sync_frontend_static.sh frontend-source
+
+      - name: Build application bundle
+        run: |
+          python3 -m venv venv
+          source venv/bin/activate
+          poetry install
+          make build SKIP_WEBUI=true
+          make test SKIP_WEBUI=true
+
+      - name: Package application
+        run: |
+          source venv/bin/activate
+          poetry install
+          make package SKIP_WEBUI=true
+          make dist/ActivityWatch.dmg
+
+      - name: Rename DMG asset
+        id: asset
+        run: |
+          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+            name="trustme-${GITHUB_REF_NAME}-macos.dmg"
+          else
+            name="trustme-latest-macos.dmg"
+          fi
+          mv dist/ActivityWatch.dmg "dist/${name}"
+          echo "name=${name}" >> "$GITHUB_OUTPUT"
+
+      - name: Upload DMG artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.asset.outputs.name }}
+          path: dist/${{ steps.asset.outputs.name }}
+
+      - name: Move latest tag
+        if: github.ref_type != 'tag'
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git tag -f latest "$GITHUB_SHA"
+          git push origin refs/tags/latest --force
+
+      - name: Publish latest release
+        if: github.ref_type != 'tag'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: Latest
+          prerelease: true
+          make_latest: false
+          files: dist/${{ steps.asset.outputs.name }}
+          fail_on_unmatched_files: true
+
+      - name: Publish tagged release
+        if: github.ref_type == 'tag'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          prerelease: false
+          make_latest: true
+          generate_release_notes: true
+          files: dist/${{ steps.asset.outputs.name }}
+          fail_on_unmatched_files: true
