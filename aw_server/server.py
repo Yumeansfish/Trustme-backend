@@ -17,6 +17,7 @@ from flask_cors import CORS
 from . import rest
 from .api import ServerAPI
 from .custom_static import get_custom_static_blueprint
+from .dashboard_summary_warmup import start_dashboard_summary_warmup
 from .log import FlaskLogHandler
 
 logger = logging.getLogger(__name__)
@@ -129,6 +130,8 @@ def _start(
         cors_origins=cors_origins,
         custom_static=custom_static,
     )
+    if not testing:
+        start_dashboard_summary_warmup(app.api)
     try:
         app.run(
             debug=testing,
