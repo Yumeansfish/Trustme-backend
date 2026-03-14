@@ -26,7 +26,7 @@ jobs:
     env:
       AW_EXTRAS: true
       MACOSX_DEPLOYMENT_TARGET: '10.9'
-      FRONTEND_REPOSITORY: Yumeansfish/dashboard
+      FRONTEND_REPOSITORY: Yumeansfish/Trustme-frontend
     steps:
       - uses: actions/checkout@v4
         with:
