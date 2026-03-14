@@ -53,11 +53,11 @@ def parse_settings():
     import argparse
 
     """ CLI Arguments """
-    parser = argparse.ArgumentParser(description="Starts an ActivityWatch server")
+    parser = argparse.ArgumentParser(description="Starts the trust-me backend")
     parser.add_argument(
         "--testing",
         action="store_true",
-        help="Run aw-server in testing mode using different ports and database",
+        help="Run the trust-me backend in testing mode using different ports and database",
     )
     parser.add_argument("--verbose", action="store_true", help="Be chatty.")
     parser.add_argument(

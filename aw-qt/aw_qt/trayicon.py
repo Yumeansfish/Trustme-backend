@@ -24,6 +24,23 @@ from .manager import Manager, Module
 logger = logging.getLogger(__name__)
 
 
+def module_display_name(module_name: str) -> str:
+    labels = {
+        "aw-server": "trustme-backend",
+        "aw-watcher-afk": "trustme-presence",
+        "aw-watcher-window": "trustme-window",
+        "aw-watcher-input": "trustme-input",
+        "aw-watcher-web": "trustme-browser",
+        "aw-watcher-vscode": "trustme-editor",
+        "aw-notify": "trustme-checkins",
+    }
+    if module_name in labels:
+        return labels[module_name]
+    if module_name.startswith("aw-"):
+        return f"trustme-{module_name[len('aw-'):]}"
+    return module_name
+
+
 def get_env() -> Dict[str, str]:
     """
     Necessary for xdg-open to work properly when PyInstaller overrides LD_LIBRARY_PATH
@@ -136,7 +153,9 @@ class TrayIcon(QSystemTrayIcon):
         def show_module_failed_dialog(module: Module) -> None:
             box = QMessageBox(self._parent)
             box.setIcon(QMessageBox.Icon.Warning)
-            box.setText(f"Module {module.name} quit unexpectedly")
+            box.setText(
+                f"Module {module_display_name(module.name)} quit unexpectedly"
+            )
             box.setDetailedText(module.read_log(self.testing))
 
             restart_button = QPushButton("Restart", box)
@@ -175,7 +194,7 @@ class TrayIcon(QSystemTrayIcon):
         moduleMenu.clear()
 
         def add_module_menuitem(module: Module) -> None:
-            title = module.name
+            title = module_display_name(module.name)
             ac = moduleMenu.addAction(title, lambda: module.toggle(self.testing))
 
             ac.setData(module)
