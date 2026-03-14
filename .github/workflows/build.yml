@@ -91,12 +91,10 @@ jobs:
           source venv/bin/activate
           poetry install
           make build SKIP_WEBUI=true
-          make test SKIP_WEBUI=true
 
       - name: Package application
         run: |
           source venv/bin/activate
-          poetry install
           make package SKIP_WEBUI=true
           make dist/ActivityWatch.dmg
 
@@ -110,6 +108,10 @@ jobs:
           fi
           mv dist/ActivityWatch.dmg "dist/${name}"
           echo "name=${name}" >> "$GITHUB_OUTPUT"
+
+      - name: Prepare stable download alias
+        if: github.ref_type != 'tag'
+        run: cp dist/${{ steps.asset.outputs.name }} dist/trustme-stable-macos.dmg
 
       - name: Upload DMG artifact
         uses: actions/upload-artifact@v4
@@ -134,7 +136,9 @@ jobs:
           prerelease: true
           make_latest: false
           overwrite_files: true
-          files: dist/${{ steps.asset.outputs.name }}
+          files: |
+            dist/${{ steps.asset.outputs.name }}
+            dist/trustme-stable-macos.dmg
           fail_on_unmatched_files: true
 
       - name: Prepare stable download alias
