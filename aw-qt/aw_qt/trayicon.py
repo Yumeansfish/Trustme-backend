@@ -269,9 +269,7 @@ def run(manager: Manager, testing: bool = False) -> Any:
         sys.exit(1)
 
     if sys.platform == "darwin":
-        icon = QIcon("icons:black-monochrome-logo.png")
-        # Allow macOS to use filters for changing the icon's color
-        icon.setIsMask(True)
+        icon = QIcon("icons:logo-128.png")
     else:
         icon = QIcon("icons:logo.png")
 
