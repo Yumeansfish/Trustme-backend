@@ -176,6 +176,7 @@ def test_summary_snapshot():
     assert window["duration"] == pytest.approx(3600)
     assert [event["data"]["app"] for event in window["app_events"]] == ["Firefox", "Code"]
     assert [event["data"]["$category"] for event in window["cat_events"]] == [["Email"], ["Code"]]
+    assert result["uncategorized_rows"] == []
 
     by_period = result["by_period"]
     first_period, second_period = category_periods
@@ -241,6 +242,7 @@ def test_summary_snapshot_expands_range_to_cover_category_periods():
     assert window["duration"] == pytest.approx(3600)
     assert result["by_period"][first_period]["cat_events"][0]["duration"] == pytest.approx(1800)
     assert result["by_period"][second_period]["cat_events"][0]["duration"] == pytest.approx(1800)
+    assert result["uncategorized_rows"] == []
 
 
 def test_summary_snapshot_route():
@@ -250,7 +252,17 @@ def test_summary_snapshot_route():
     category_periods = [
         f"{base.isoformat()}/{(base + timedelta(minutes=30)).isoformat()}",
     ]
-    expected = {"window": {"app_events": [], "title_events": [], "cat_events": [], "active_events": [], "duration": 0}, "by_period": {category_periods[0]: {"cat_events": []}}}
+    expected = {
+        "window": {
+            "app_events": [],
+            "title_events": [],
+            "cat_events": [],
+            "active_events": [],
+            "duration": 0,
+        },
+        "by_period": {category_periods[0]: {"cat_events": []}},
+        "uncategorized_rows": [],
+    }
     captured = {}
 
     def fake_summary_snapshot(**kwargs):
@@ -414,6 +426,68 @@ def test_summary_snapshot_updates_open_period_incrementally(tmp_path):
         start is not None and start >= base + timedelta(minutes=30)
         for _, start, _ in window_bucket.calls[1:]
     )
+
+
+def test_summary_snapshot_returns_uncategorized_rows_independent_of_category_filters():
+    base = datetime(2026, 3, 1, 10, 0, tzinfo=timezone.utc)
+    db = FakeDB(
+        {
+            "test-window": FakeBucket(
+                [
+                    Event(
+                        timestamp=base,
+                        duration=1800,
+                        data={"app": "Antigravity", "title": "Prototype"},
+                    ),
+                    Event(
+                        timestamp=base + timedelta(minutes=30),
+                        duration=1800,
+                        data={"app": "Code", "title": "trust-me"},
+                    ),
+                ]
+            ),
+            "test-afk": FakeBucket(
+                [
+                    Event(
+                        timestamp=base - timedelta(minutes=5),
+                        duration=4200,
+                        data={"status": "not-afk"},
+                    )
+                ]
+            ),
+        }
+    )
+
+    category_periods = [
+        f"{base.isoformat()}/{(base + timedelta(hours=1)).isoformat()}",
+    ]
+    result = build_summary_snapshot(
+        db,
+        range_start=base,
+        range_end=base + timedelta(hours=1),
+        category_periods=category_periods,
+        window_buckets=["test-window"],
+        afk_buckets=["test-afk"],
+        stopwatch_buckets=[],
+        filter_afk=True,
+        categories=[
+            [["Code"], {"type": "regex", "regex": "Code", "ignore_case": True}],
+        ],
+        filter_categories=[["Code"]],
+        always_active_pattern="",
+    )
+
+    assert [event["data"]["app"] for event in result["window"]["app_events"]] == ["Code"]
+    assert result["uncategorized_rows"] == [
+        {
+            "key": "Antigravity",
+            "app": "Antigravity",
+            "title": "Antigravity",
+            "subtitle": "",
+            "duration": pytest.approx(1800),
+            "matchText": "Antigravity",
+        }
+    ]
 
 
 # TODO: Add benchmark for basic AFK-filtering query
