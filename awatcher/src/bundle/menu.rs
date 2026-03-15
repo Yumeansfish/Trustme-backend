@@ -111,7 +111,7 @@ impl ksni::Tray for Tray {
 
         vec![
             ksni::menu::StandardItem {
-                label: "ActivityWatch".into(),
+                label: "trust-me".into(),
                 // https://specifications.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html
                 icon_name: "document-properties".into(),
                 activate: Box::new(move |this: &mut Self| {
