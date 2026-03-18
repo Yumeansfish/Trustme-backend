@@ -68,6 +68,8 @@ Rebuild yearly and monthly snapshots:
 - Use `clear` when cached state is known to be obsolete.
 - Use `rebuild` after seeded-data imports or historical backfills.
 - Prefer targeted logical-period clears over full-store deletion when possible.
+- See [Seeded Data Workflow](./seeded-data-workflow.md) for the supported
+  import-and-rebuild path.
 
 ## Notes
 
