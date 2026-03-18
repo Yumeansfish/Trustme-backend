@@ -93,3 +93,16 @@ to the frontend.
 - Backend refactors should converge toward a service layer above raw buckets.
 - Snapshot changes must preserve the DTO contract while remaining backend
   implementation detail.
+
+## Follow-up issues
+
+This boundary document is the reference point for the next cleanup steps:
+
+- Trustme-backend `#11` Refactor backend summary pipeline into smaller modules
+- Trustme-backend `#12` Replace coarse summary snapshot invalidation with scoped invalidation
+- Trustme-backend `#14` Formalize settings schema and server-side defaults
+- Trustme-backend `#15` Introduce a backend domain service layer above raw buckets
+- Trustme-backend `#16` Define typed DTO contracts for dashboard endpoints
+- Trustme-frontend `#16` Make activity summary DTO-only on the frontend
+- Trustme-frontend `#17` Split the activity store into smaller modules
+- Trustme-frontend `#18` Remove legacy data logic from stopwatch and uncategorized views

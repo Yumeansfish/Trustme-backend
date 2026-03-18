@@ -9,6 +9,14 @@ The code-level typed representations live in:
 
 - `aw_server/dashboard_dto.py`
 
+Runtime serialization guarantees also live in:
+
+- `aw_server/dashboard_dto.py`
+
+API responses for these endpoints are serialized through backend-owned DTO helpers
+before they are returned. Follow-up frontend cleanup may rely on the presence of
+documented fields even if the internal builder logic changes.
+
 ## Summary snapshot contract
 
 Endpoint:

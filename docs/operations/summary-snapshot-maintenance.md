@@ -77,3 +77,6 @@ Rebuild yearly and monthly snapshots:
   truth.
 - Raw buckets remain authoritative.
 - Clearing or rebuilding snapshots must never be treated as a data-loss event.
+- Manual deletion of snapshot sqlite files is no longer part of the supported
+  workflow. Use `scripts/manage_summary_snapshots.py clear` or `rebuild`
+  instead.
