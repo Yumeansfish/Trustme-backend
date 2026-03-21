@@ -147,8 +147,8 @@ pub mod android {
                                                  //        .parse("debug,hello::crate=error")
                                                  //        .build())
             );
-            info!("Initializing aw-server-rust...");
-            debug!("Redirected aw-server-rust stdout/stderr to logcat");
+            info!("Initializing Trust-me Rust server...");
+            debug!("Redirected Trust-me Rust server stdout/stderr to logcat");
         } else {
             info!("Already initialized");
         }

@@ -54,7 +54,7 @@ struct Opts {
     #[clap(long)]
     device_id: Option<String>,
 
-    /// Don't import from the legacy Python server if no aw-server-rust db found
+    /// Don't import from the legacy Python server if no Rust server db is found
     #[clap(long)]
     no_legacy_import: bool,
 }

@@ -1,9 +1,11 @@
 /// Basic syncing for Trust-me-compatible event stores.
-/// Based on: https://github.com/ActivityWatch/aw-server/pull/50
+/// Based on an upstream aw-server sync prototype:
+/// https://github.com/ActivityWatch/aw-server/pull/50
 ///
 /// This does not handle any direct peer interaction/connections/networking, it works as a "bring your own folder synchronizer".
 ///
-/// It manages a sync-folder by syncing the aw-server datastore with a copy/staging datastore in the folder (one for each host).
+/// It manages a sync-folder by syncing the server datastore with a
+/// copy/staging datastore in the folder (one for each host).
 /// The sync folder is then synced with remotes using Syncthing/Dropbox/whatever.
 extern crate chrono;
 extern crate reqwest;
@@ -63,8 +65,9 @@ pub fn sync_run(
 ) -> Result<(), Box<dyn Error>> {
     let info = client.get_info()?;
 
-    // FIXME: Here it is assumed that the device_id for the local server is the one used by
-    // aw-server-rust, which is not necessarily true for the legacy Python server.
+    // FIXME: Here it is assumed that the device_id for the local server is the
+    // one used by the Rust server, which is not necessarily true for the
+    // legacy Python server.
     // Therefore, this may sometimes fail to pick up the correct local datastore.
     let device_id = info.device_id.as_str();
 

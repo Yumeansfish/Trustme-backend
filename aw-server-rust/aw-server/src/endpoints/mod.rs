@@ -129,7 +129,7 @@ fn get_file(file: PathBuf, state: &State<ServerState>) -> Option<(ContentType, V
 
 pub fn build_rocket(server_state: ServerState, config: AWConfig) -> rocket::Rocket<rocket::Build> {
     info!(
-        "Starting aw-server-rust at {}:{}",
+        "Starting Trust-me Rust server at {}:{}",
         config.address, config.port
     );
     let cors = cors::cors(&config);
