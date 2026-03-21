@@ -36,6 +36,10 @@ supported surface. If Linux release automation returns, it should be rebuilt
 around the current Trust-me packaging path instead of reviving the old
 ActivityWatch-era scripts.
 
+Legacy Windows installer helpers have also been retired. If Windows packaging
+returns, it should be rebuilt around the current Trust-me release flow instead
+of reviving the old Inno Setup path.
+
 ## Historical cleanup boundary
 
 Inherited ActivityWatch release automation is tracked separately from this
