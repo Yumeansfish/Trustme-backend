@@ -25,6 +25,12 @@ These scripts support packaging environments. They are not runtime
 dependencies, but they are intentionally kept while the packaging surface
 exists.
 
+The actively maintained release path is the Trust-me-owned GitHub Actions build
+workflow plus the packaging helpers it still invokes directly. Manual Linux
+packaging helpers that are merely present in `package/` should not be assumed
+to be part of the current supported CI path unless they are wired into that
+workflow.
+
 ## Historical cleanup boundary
 
 Inherited ActivityWatch release automation is tracked separately from this
