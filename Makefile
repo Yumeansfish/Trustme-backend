@@ -210,7 +210,7 @@ endif
 	rm -f dist/trust-me/libharfbuzz.so.0
 # These should be provided by the distro itself
 # Had to be removed due to otherwise causing the error:
-#   aw-qt: symbol lookup error: /opt/activitywatch/libQt5XcbQpa.so.5: undefined symbol: FT_Get_Font_Format
+#   bundled Qt platform libraries can fail to resolve distro-provided font symbols
 	rm -f dist/trust-me/libfontconfig.so.1
 	rm -f dist/trust-me/libfreetype.so.6
 # Remove unnecessary files
