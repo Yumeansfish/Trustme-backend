@@ -46,7 +46,7 @@ echo "Platform: $platform, arch: $arch, version: $version"
 function build_zip() {
     echo "Zipping executables..."
     pushd dist;
-    filename="activitywatch-${version}-${platform}-${arch}.zip"
+    filename="trust-me-${version}-${platform}-${arch}.zip"
     echo "Name of package will be: $filename"
 
     if [[ $platform == "windows"* ]]; then
