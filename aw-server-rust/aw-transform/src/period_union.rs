@@ -5,7 +5,8 @@ use std::collections::VecDeque;
 /// Takes a list of two events and returns a new list of events covering the union
 /// of the timeperiods contained in the eventlists with no overlapping events.
 ///
-/// aw-core implementation: https://github.com/ActivityWatch/aw-core/blob/b11fbe08a0405dec01380493f7b3261163cc6878/aw_transform/filter_period_intersect.py#L92
+/// Upstream aw-core implementation:
+/// https://github.com/ActivityWatch/aw-core/blob/b11fbe08a0405dec01380493f7b3261163cc6878/aw_transform/filter_period_intersect.py#L92
 ///
 /// WARNING: This function strips all data from events as it cannot keep it consistent.
 ///

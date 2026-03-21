@@ -1,6 +1,6 @@
 //! Default classes
 //!
-//! Taken from default classes in aw-webui
+//! Derived from the historical default class set.
 
 use log::warn;
 use rand::Rng;

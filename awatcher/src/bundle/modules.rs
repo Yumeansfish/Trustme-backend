@@ -1,4 +1,4 @@
-// This repeats the functionality of aw-qt from ActivityWatch.
+// This repeats the legacy aw-qt-style module launch behavior.
 
 use serde::{Deserialize, Serialize};
 use std::os::unix::fs::PermissionsExt;

@@ -1,7 +1,7 @@
-//! Query building utilities for ActivityWatch
+//! Query building utilities for Trust-me-compatible query flows.
 //!
-//! This module provides functionality to build canonical queries that are compatible
-//! with the ActivityWatch query language. It includes support for:
+//! This module provides functionality to build canonical queries compatible
+//! with the existing query language. It includes support for:
 //!
 //! - Desktop and Android query parameters
 //! - Server-side categorization classes fetching
@@ -10,7 +10,7 @@
 //!
 //! ## Server-side Classes
 //!
-//! The queries can automatically fetch categorization classes from the ActivityWatch server:
+//! The queries can automatically fetch categorization classes from the server:
 //!
 //! ```rust
 //! use aw_client_rust::queries::{DesktopQueryParams, QueryParams, QueryParamsBase};
