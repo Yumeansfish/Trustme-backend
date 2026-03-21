@@ -74,7 +74,7 @@ tomlkit = "*"
 [[package]]
 name = "aw-watcher-afk"
 version = "0.2.0"
-description = "AFK watcher for ActivityWatch"
+description = "AFK watcher for Trust-me"
 optional = false
 python-versions = "^3.8"
 files = []
@@ -87,10 +87,8 @@ pyobjc-framework-Quartz = {version = "*", markers = "sys_platform == \"darwin\""
 python-xlib = {version = "0.31", markers = "sys_platform == \"linux\""}
 
 [package.source]
-type = "git"
-url = "https://github.com/ActivityWatch/aw-watcher-afk.git"
-reference = "HEAD"
-resolved_reference = "9f9a4fd3c51635ba362a51ac8e7bc47abd56fa05"
+type = "directory"
+url = "../aw-watcher-afk"
 
 [[package]]
 name = "black"
@@ -1076,4 +1074,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "a9828190cf559f6dc4bc51a60cc99f5236a1b919d342bfac2182d6b62b93bfe7"
+content-hash = "7e6164d00884039274866807ea9097fa3b159ff46043f34c7fd086f62f5bc642"
