@@ -31,3 +31,7 @@ exists.
 Inherited ActivityWatch release automation is tracked separately from this
 README cleanup. The goal here is simply to keep clearly supported utilities
 distinguishable from unsupported leftovers.
+
+Root-level install, uninstall, log scraping, and line-count shortcuts are not a
+supported surface here anymore. If an operator workflow still matters, it
+should live with the owning module or be documented under `docs/operations/`.
