@@ -54,7 +54,7 @@ def test_checkins_route_returns_backend_payload(monkeypatch):
         assert date_filter == "2026-03-14"
         return expected
 
-    app.api.get_checkins = fake_get_checkins
+    app.api.dashboard.checkins = fake_get_checkins
 
     response = flask_client.get("/api/0/dashboard/checkins?date=2026-03-14")
     assert response.status_code == 200

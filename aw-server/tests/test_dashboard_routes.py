@@ -27,7 +27,7 @@ def test_summary_snapshot_route():
         captured.update(kwargs)
         return expected
 
-    app.api.summary_snapshot = fake_summary_snapshot
+    app.api.dashboard.summary_snapshot = fake_summary_snapshot
 
     payload = {
         "range": {
@@ -71,7 +71,7 @@ def test_dashboard_scope_route():
         captured.update(kwargs)
         return expected
 
-    app.api.resolve_dashboard_scope = fake_resolve_dashboard_scope
+    app.api.dashboard.resolve_scope = fake_resolve_dashboard_scope
 
     payload = {
         "hosts": ["alpha.local"],
@@ -103,7 +103,7 @@ def test_dashboard_details_route():
         captured.update(kwargs)
         return expected
 
-    app.api.dashboard_details = fake_dashboard_details
+    app.api.dashboard.details = fake_dashboard_details
 
     payload = {
         "range": {
@@ -127,8 +127,66 @@ def test_default_dashboard_hosts_route():
     app = AWFlask("127.0.0.1", testing=True)
     flask_client = app.test_client()
 
-    app.api.default_dashboard_hosts = lambda: {"resolved_hosts": ["alpha.local", "beta.local"]}
+    app.api.dashboard.default_hosts = (
+        lambda: {"resolved_hosts": ["alpha.local", "beta.local"]}
+    )
 
     r = flask_client.get("/api/0/dashboard/default-hosts")
     assert r.status_code == 200
     assert r.json == {"resolved_hosts": ["alpha.local", "beta.local"]}
+
+
+def test_dashboard_scope_route_rejects_non_string_hosts():
+    app = AWFlask("127.0.0.1", testing=True)
+    flask_client = app.test_client()
+
+    r = flask_client.post("/api/0/dashboard/resolve-scope", json={"hosts": ["alpha", 7]})
+
+    assert r.status_code == 400
+    assert "hosts must be a list of strings" in r.json["message"]
+
+
+def test_summary_snapshot_route_rejects_non_boolean_filter_afk():
+    app = AWFlask("127.0.0.1", testing=True)
+    flask_client = app.test_client()
+    base = datetime(2026, 3, 1, 10, 0, tzinfo=timezone.utc)
+
+    r = flask_client.post(
+        "/api/0/dashboard/summary-snapshot",
+        json={
+            "range": {
+                "start": base.isoformat(),
+                "end": (base + timedelta(hours=1)).isoformat(),
+            },
+            "category_periods": [],
+            "window_buckets": [],
+            "afk_buckets": [],
+            "filter_afk": "true",
+            "filter_categories": [],
+        },
+    )
+
+    assert r.status_code == 400
+    assert "filter_afk must be a boolean" in r.json["message"]
+
+
+def test_dashboard_details_route_rejects_non_string_bucket_entries():
+    app = AWFlask("127.0.0.1", testing=True)
+    flask_client = app.test_client()
+    base = datetime(2026, 3, 1, 10, 0, tzinfo=timezone.utc)
+
+    r = flask_client.post(
+        "/api/0/dashboard/details",
+        json={
+            "range": {
+                "start": base.isoformat(),
+                "end": (base + timedelta(hours=1)).isoformat(),
+            },
+            "window_buckets": ["window-a"],
+            "browser_buckets": ["browser-a", 2],
+            "stopwatch_buckets": [],
+        },
+    )
+
+    assert r.status_code == 400
+    assert "browser_buckets must be a list of strings" in r.json["message"]

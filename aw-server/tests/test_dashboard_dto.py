@@ -2,7 +2,6 @@ import json
 from pathlib import Path
 from datetime import datetime, timedelta, timezone
 
-import aw_server.api as api_module
 from aw_server.dashboard_dto import (
     serialize_dashboard_details_response,
     serialize_dashboard_default_hosts_response,
@@ -228,7 +227,7 @@ def test_server_api_summary_snapshot_serializes_builder_output(monkeypatch):
     category_period = f"{base.isoformat()}/{(base + timedelta(hours=1)).isoformat()}"
     captured_kwargs = {}
 
-    def fake_build_summary_snapshot_response(**kwargs):
+    def fake_summary_snapshot(**kwargs):
         captured_kwargs.update(kwargs)
         return {
             "window": {
@@ -251,11 +250,7 @@ def test_server_api_summary_snapshot_serializes_builder_output(monkeypatch):
             ],
         }
 
-    monkeypatch.setattr(
-        api_module,
-        "build_summary_snapshot_response",
-        fake_build_summary_snapshot_response,
-    )
+    monkeypatch.setattr(app.api.dashboard, "summary_snapshot", fake_summary_snapshot)
 
     result = app.api.summary_snapshot(
         range_start=base,
@@ -268,7 +263,6 @@ def test_server_api_summary_snapshot_serializes_builder_output(monkeypatch):
         filter_categories=[],
     )
 
-    assert captured_kwargs["settings_data"] == app.api.settings.get("")
     assert captured_kwargs["window_buckets"] == ["test-window"]
     assert captured_kwargs["category_periods"] == [category_period]
     assert result["window"]["duration"] == 1800.0
@@ -277,31 +271,31 @@ def test_server_api_summary_snapshot_serializes_builder_output(monkeypatch):
     assert result["uncategorized_rows"][0]["title"] == "Antigravity"
 
 
-def test_server_api_get_checkins_serializes_builder_output(monkeypatch):
+def test_server_api_get_checkins_delegates_to_dashboard_facade(monkeypatch):
     app = AWFlask("127.0.0.1", testing=True)
 
-    def fake_build_checkins_payload(*, date_filter=None):
+    def fake_checkins(*, date_filter=None):
         assert date_filter == "2026-03-14"
         return {
+            "data_source": "",
             "available_dates": ["2026-03-14"],
             "sessions": [{"id": "session-1", "answers": [{"status": "answered"}]}],
         }
 
-    monkeypatch.setattr(api_module, "build_checkins_payload", fake_build_checkins_payload)
+    monkeypatch.setattr(app.api.dashboard, "checkins", fake_checkins)
 
     result = app.api.get_checkins(date_filter="2026-03-14")
 
     assert result["data_source"] == ""
     assert result["available_dates"] == ["2026-03-14"]
-    assert result["sessions"][0]["answered_count"] == 1
-    assert result["sessions"][0]["skipped_count"] == 0
+    assert result["sessions"][0]["id"] == "session-1"
 
 
 def test_server_api_resolve_dashboard_scope_serializes_builder_output(monkeypatch):
     app = AWFlask("127.0.0.1", testing=True)
     base = datetime(2026, 3, 1, 10, 0, tzinfo=timezone.utc)
 
-    def fake_build_dashboard_scope_response(**kwargs):
+    def fake_resolve_scope(**kwargs):
         assert kwargs["requested_hosts"] == ["alpha.local"]
         assert kwargs["range_start"] == base
         assert kwargs["range_end"] == base + timedelta(hours=1)
@@ -314,9 +308,7 @@ def test_server_api_resolve_dashboard_scope_serializes_builder_output(monkeypatc
             "stopwatch_buckets": ["stopwatch-a"],
         }
 
-    monkeypatch.setattr(
-        api_module, "build_dashboard_scope_response", fake_build_dashboard_scope_response
-    )
+    monkeypatch.setattr(app.api.dashboard, "resolve_scope", fake_resolve_scope)
 
     result = app.api.resolve_dashboard_scope(
         requested_hosts=["alpha.local"],
@@ -334,7 +326,7 @@ def test_server_api_dashboard_details_serializes_builder_output(monkeypatch):
     app = AWFlask("127.0.0.1", testing=True)
     base = datetime(2026, 3, 1, 10, 0, tzinfo=timezone.utc)
 
-    def fake_build_dashboard_details_response(**kwargs):
+    def fake_details(**kwargs):
         assert kwargs["window_buckets"] == ["window-a"]
         assert kwargs["browser_buckets"] == ["browser-a"]
         assert kwargs["stopwatch_buckets"] == ["stopwatch-a"]
@@ -360,9 +352,7 @@ def test_server_api_dashboard_details_serializes_builder_output(monkeypatch):
             },
         }
 
-    monkeypatch.setattr(
-        api_module, "build_dashboard_details_response", fake_build_dashboard_details_response
-    )
+    monkeypatch.setattr(app.api.dashboard, "details", fake_details)
 
     result = app.api.dashboard_details(
         range_start=base,
@@ -379,15 +369,10 @@ def test_server_api_dashboard_details_serializes_builder_output(monkeypatch):
 def test_server_api_default_dashboard_hosts_serializes_builder_output(monkeypatch):
     app = AWFlask("127.0.0.1", testing=True)
 
-    def fake_build_default_dashboard_hosts_response(**kwargs):
-        assert kwargs["settings_data"] == app.api.settings.get("")
+    def fake_default_hosts():
         return {"resolved_hosts": ["alpha.local", "beta.local"]}
 
-    monkeypatch.setattr(
-        api_module,
-        "build_default_dashboard_hosts_response",
-        fake_build_default_dashboard_hosts_response,
-    )
+    monkeypatch.setattr(app.api.dashboard, "default_hosts", fake_default_hosts)
 
     result = app.api.default_dashboard_hosts()
 

@@ -36,7 +36,9 @@ python -m pytest \
   -o addopts='' \
   aw-server/tests/test_dashboard_details.py \
   aw-server/tests/test_dashboard_domain_service.py \
+  aw-server/tests/test_dashboard_api_facade.py \
   aw-server/tests/test_dashboard_dto.py \
   aw-server/tests/test_summary_snapshot_response.py \
   aw-server/tests/test_dashboard_routes.py \
+  aw-server/tests/test_checkins.py \
   "$@"
