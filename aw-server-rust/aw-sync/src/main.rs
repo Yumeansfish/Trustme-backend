@@ -29,7 +29,7 @@ mod sync_wrapper;
 mod util;
 
 #[derive(Parser)]
-#[clap(version = "0.1", author = "Erik Bjäreholt")]
+#[clap(version = "0.1", author = "Trust-me contributors")]
 struct Opts {
     #[clap(subcommand)]
     command: Option<Commands>,

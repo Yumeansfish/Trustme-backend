@@ -569,8 +569,8 @@ fn get_time(
         }
     }
 
-    // Query ActivityWatch (matching Python logic exactly)
-    let result = query_activitywatch(date, aggregation_mode)?;
+    // Query the server using the legacy Python-compatible flow.
+    let result = query_server(date, aggregation_mode)?;
 
     // Cache the result
     TIME_CACHE.insert(
@@ -581,7 +581,7 @@ fn get_time(
     Ok(result)
 }
 
-fn query_activitywatch(
+fn query_server(
     date: Option<DateTime<Utc>>,
     aggregation_mode: CategoryAggregation,
 ) -> Result<HashMap<String, f64>> {
@@ -680,7 +680,7 @@ RETURN = {{"events": events, "duration": duration, "cat_events": cat_events}};"#
             ) {
                 // Handle both string and array category formats (like old version)
                 let cat_name = if let Some(cat_array) = category.as_array() {
-                    // For hierarchical categories like ["Work", "Programming", "ActivityWatch"],
+                    // For hierarchical categories like ["Work", "Programming", "Trust-me"],
                     // join them with " > " to preserve the full hierarchy
                     let category_parts: Vec<String> = cat_array
                         .iter()
@@ -1219,7 +1219,7 @@ fn get_server_classes() -> Vec<(CategoryId, CategorySpec)> {
 }
 
 /// Aggregate hierarchical categories by their top-level category
-/// E.g., "Work > Programming > ActivityWatch" -> "Work"
+/// E.g., "Work > Programming > Trust-me" -> "Work"
 fn aggregate_categories_by_top_level(cat_time: &HashMap<String, f64>) -> HashMap<String, f64> {
     let mut aggregated: HashMap<String, f64> = HashMap::new();
 

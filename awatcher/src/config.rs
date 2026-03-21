@@ -41,13 +41,13 @@ pub fn setup_logger(verbosity: LevelFilter) -> Result<(), fern::InitError> {
 }
 
 pub fn from_cli() -> anyhow::Result<RunnerConfig> {
-    let matches = Command::new("Activity Watcher")
+    let matches = Command::new("Trust-me Watcher")
         .version(env!("CARGO_PKG_VERSION"))
         .about(
             #[cfg(not(feature = "bundle"))]
-            "X11 and Wayland active window and idle watcher for ActivityWatch server",
+            "X11 and Wayland active window and idle watcher for the Trust-me server",
             #[cfg(feature = "bundle")]
-            "X11 and Wayland active window and idle watcher with a bundled ActivityWatch server",
+            "X11 and Wayland active window and idle watcher with a bundled Trust-me server",
         )
         .args([
             arg!(-c --config <FILE> "Custom config file").value_parser(value_parser!(PathBuf)),
@@ -67,7 +67,7 @@ pub fn from_cli() -> anyhow::Result<RunnerConfig> {
             arg!(--"poll-time-window" <SECONDS> "Period between sending heartbeats to the server for window activity")
                 .value_parser(value_parser!(u32))
                 .default_value(defaults::poll_time_window_seconds().to_string()),
-            arg!(--"no-server" "Don't send data to the ActivityWatch server")
+            arg!(--"no-server" "Don't send data to the Trust-me server")
                 .value_parser(value_parser!(bool))
                 .action(ArgAction::SetTrue),
             #[cfg(feature = "bundle")]

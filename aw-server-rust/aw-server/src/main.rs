@@ -17,9 +17,9 @@ extern crate jemallocator;
 #[global_allocator]
 static ALLOC: jemallocator::Jemalloc = jemallocator::Jemalloc;
 
-/// Rust server for ActivityWatch
+/// Rust server for Trust-me
 #[derive(Parser)]
-#[clap(version = crate_version!(), author = "Johan Bjäreholt, Erik Bjäreholt, et al.")]
+#[clap(version = crate_version!(), author = "Trust-me contributors")]
 struct Opts {
     /// Run in testing mode
     #[clap(long)]
