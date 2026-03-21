@@ -1,13 +1,11 @@
 [tool.poetry]
 name = "aw-core"
 version = "0.5.17"
-description = "Core library for ActivityWatch"
-authors = ["Erik Bjäreholt <erik@bjareho.lt>", "Johan Bjäreholt <johan@bjareho.lt>"]
+description = "Shared Python core libraries for Trust-me"
+authors = ["Trust-me contributors"]
 license = "MPL-2.0"
 readme = "README.md"
-homepage = "https://activitywatch.net/"
-repository = "https://github.com/ActivityWatch/aw-core/"
-documentation = "https://docs.activitywatch.net/"
+repository = "https://github.com/Yumeansfish/Trustme-backend"
 packages = [
     { include = "aw_cli" },
     { include = "aw_core" },

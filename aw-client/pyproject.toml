@@ -1,13 +1,11 @@
 [tool.poetry]
 name = "aw-client"
 version = "0.5.15"
-description = "Client library for ActivityWatch"
-authors = ["Erik Bjäreholt <erik@bjareho.lt>", "Johan Bjäreholt <johan@bjareho.lt>"]
+description = "Python client utilities for Trust-me services"
+authors = ["Trust-me contributors"]
 license = "MPL-2.0"
 readme = "README.md"
-homepage = "https://activitywatch.net/"
-repository = "https://github.com/ActivityWatch/aw-client/"
-documentation = "https://docs.activitywatch.net/"
+repository = "https://github.com/Yumeansfish/Trustme-backend"
 packages = [
     { include = "aw_client" },
 ]

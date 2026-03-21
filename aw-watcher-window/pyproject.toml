@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "aw-watcher-window"
 version = "0.2.0"
-description = "Window watcher for ActivityWatch"
-authors = ["Erik Bjäreholt <erik@bjareho.lt>"]
+description = "Window watcher for Trust-me"
+authors = ["Trust-me contributors"]
 license = "MPL-2.0"
 
 [tool.poetry.scripts]

@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "aw-qt"
 version = "0.1.0"
-description = "Trayicon for ActivityWatch"
-authors = ["Erik Bjäreholt <erik@bjareho.lt>"]
+description = "Qt tray manager for Trust-me services"
+authors = ["Trust-me contributors"]
 license = "MPL-2.0"
 include = ["aw_qt/resources.py"]  # resources.py is in .gitignore and generated before build
 packages = [

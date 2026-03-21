@@ -2,12 +2,12 @@
 name = "aw-notify-rs"
 version = "0.2.0"
 edition = "2021"
-description = "Desktop notifications for ActivityWatch time tracking data"
-authors = ["ActivityWatch Contributors"]
+description = "Desktop notifications for Trust-me time tracking data"
+authors = ["Trust-me contributors"]
 readme = "README.md"
-repository = "https://github.com/ActivityWatch/aw-notify-rs"
+repository = "https://github.com/Yumeansfish/Trustme-backend"
 license = "MPL-2.0"
-keywords = ["activitywatch", "time-tracking", "notifications"]
+keywords = ["trust-me", "time-tracking", "notifications"]
 categories = ["gui"]
 
 [[bin]]
@@ -15,7 +15,7 @@ name = "aw-notify"
 path = "src/main.rs"
 
 [dependencies]
-# ActivityWatch client
+# Backend client crates
 aw-client-rust = {git = "https://github.com/ActivityWatch/aw-server-rust", branch="master"}
 aw-models = { git = "https://github.com/ActivityWatch/aw-server-rust.git", branch = "master" }
 
