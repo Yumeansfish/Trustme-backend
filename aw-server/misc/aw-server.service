@@ -1,5 +1,5 @@
 [Unit]
-Description=ActivityWatch
+Description=Trust-me Python Server
 Documentation=
 After=mongodb.service
 

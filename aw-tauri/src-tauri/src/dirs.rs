@@ -1,4 +1,4 @@
-//! Directory management for ActivityWatch Tauri
+//! Directory management for the Trust-me Tauri shell
 //!
 //! Supported platforms: Windows, Linux, macOS, Android
 

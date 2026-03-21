@@ -1,7 +1,7 @@
-//! A process manager for ActivityWatch
+//! A process manager for the Trust-me desktop shell
 //!
 //! Used to start, stop and manage the lifecycle modules like aw-watcher-afk and aw-watcher-window.
-//! A module is a process that runs in the background and sends events to the ActivityWatch server.
+//! A module is a process that runs in the background and sends events to the local server.
 //!
 //! The manager is responsible for starting and stopping the modules, and for keeping track of
 //! their state.

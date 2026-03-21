@@ -8,8 +8,8 @@
 # 4. Run 'systemctl --user start aw-server-rust.service' to start aw-server-rust
 # 5. (Optional) Run 'systemctl --user enable aw-server-rust.service' to always start aw-server-rust when you log in
 #
-# Now aw-server-rust should be running, you can now start whatever
-# ActivityWatch watchers you desire and can find the WebUI at
+# Now aw-server-rust should be running, you can now start the
+# Trust-me watcher modules you want and find the dashboard at
 # http://localhost:5600
 #
 
@@ -18,7 +18,7 @@ Type=notify
 ExecStart=aw-server
 
 [Unit]
-Description=ActivityWatch Server (Rust implementation)
+Description=Trust-me Rust Server
 After=network.target
 
 [Install]
