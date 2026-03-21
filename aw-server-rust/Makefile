@@ -1,7 +1,9 @@
-.PHONY: all aw-server aw-webui build install package set-version test test-coverage test-coverage-tarpaulin test-coverage-grcov coverage coverage-html coverage-lcov
+.PHONY: all aw-server build install package set-version test test-coverage test-coverage-tarpaulin test-coverage-grcov coverage coverage-html coverage-lcov frontend-artifact
 
 all: build
 build: aw-server aw-sync
+
+AW_WEBUI_DIR ?= $(abspath ../build/frontend-artifact)
 
 DESTDIR :=
 ifeq ($(SUDO_USER),)
@@ -20,18 +22,22 @@ else
 	targetdir := release
 endif
 
-aw-server: set-version aw-webui
-	cargo build $(cargoflag) --bin aw-server
+aw-server: set-version frontend-artifact
+	AW_WEBUI_DIR="$(AW_WEBUI_DIR)" cargo build $(cargoflag) --bin aw-server
 
 aw-sync: set-version
-	cargo build $(cargoflag) --bin aw-sync
+	AW_WEBUI_DIR="$(AW_WEBUI_DIR)" cargo build $(cargoflag) --bin aw-sync
 
-aw-webui:
-ifeq ($(SKIP_WEBUI),true) # Skip building webui if SKIP_WEBUI is true
-	@echo "Skipping building webui"
-else
-	make -C ./aw-webui build
-endif
+frontend-artifact:
+	@mkdir -p "$(AW_WEBUI_DIR)"
+	@if [ -f "$(AW_WEBUI_DIR)/index.html" ]; then \
+		echo "Using frontend artifact from $(AW_WEBUI_DIR)"; \
+	elif [ "$(SKIP_WEBUI)" = "true" ]; then \
+		echo "Skipping frontend artifact generation; building without embedded assets from $(AW_WEBUI_DIR)"; \
+	else \
+		echo "Frontend artifact not found at $(AW_WEBUI_DIR). Run 'make -C .. prepare-frontend' or set AW_WEBUI_DIR." >&2; \
+		exit 1; \
+	fi
 
 android:
 	./install-ndk.sh

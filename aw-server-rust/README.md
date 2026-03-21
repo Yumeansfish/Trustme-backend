@@ -19,11 +19,15 @@ Build with `cargo`:
 cargo build --release
 ```
 
-You can also build with make, which will build the web assets as well:
+You can also build with make after preparing a frontend artifact:
 
 ```
+make -C .. prepare-frontend FRONTEND_DIR=../frontend
 make build
 ```
+
+`aw-server-rust` consumes a built frontend artifact from `../build/frontend-artifact` by default.
+Set `AW_WEBUI_DIR=/absolute/path/to/dist` if you want to point it at a different build output.
 
 Your built executable will be located in `./target/release/aw-server-rust`. If you want to use it with a development version of `aw-qt` you'll want to copy this binary into your `venv`:
 

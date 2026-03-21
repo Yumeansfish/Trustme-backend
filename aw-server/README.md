@@ -15,10 +15,14 @@ ActivityWatch server, for secure storage and retrieval of all your Quantified Se
 To install program and dependencies, Poetry is required. You'll want to activate a `venv` before building.
 
 ```bash
+make -C .. prepare-frontend FRONTEND_DIR=../frontend
 make build
 ```
 
 The `aw-server` binary should now be available to you in your PATH (if it is set correctly).
+
+`aw-server` consumes built frontend assets from `../build/frontend-artifact` by default.
+Set `AW_WEBUI_DIR=/absolute/path/to/dist` if you want to stage a different frontend build.
 
 ## Usage
 
@@ -45,4 +49,3 @@ aw-server --testing
 You can also get a very decent API browser by browsing to `localhost:5600` after starting the server.
 
 There are also some API examples in the [documentation](https://docs.activitywatch.net/en/latest/api.html).
-

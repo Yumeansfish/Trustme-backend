@@ -7,11 +7,14 @@
 #
 # We recommend creating and activating a Python virtualenv before building.
 # Instructions on how to do this can be found in the guide linked above.
-.PHONY: build install test clean clean_all prepare-frontend
+.PHONY: build install test test-dashboard clean clean_all prepare-frontend
 
 SHELL := /usr/bin/env bash
 
 OS := $(shell uname -s)
+FRONTEND_DIR ?= ../frontend
+AW_WEBUI_DIR ?= $(abspath build/frontend-artifact)
+export AW_WEBUI_DIR
 
 ifeq ($(TAURI_BUILD),true)
 	SUBMODULES := aw-core aw-client aw-server aw-server-rust aw-watcher-afk aw-watcher-window aw-tauri
@@ -67,12 +70,15 @@ build:
 #	needed due to https://github.com/pypa/setuptools/issues/1963
 #	would ordinarily be specified in pyproject.toml, but is not respected due to https://github.com/pypa/setuptools/issues/1963
 	pip install 'setuptools>49.1.1'
+	if [ "$(SKIP_WEBUI)" != "true" ]; then \
+		$(MAKE) prepare-frontend FRONTEND_DIR="$(FRONTEND_DIR)" AW_WEBUI_DIR="$(AW_WEBUI_DIR)" || exit 2; \
+	fi
 	for module in $(SUBMODULES); do \
 		echo "Building $$module"; \
 		if [ "$$module" = "aw-server-rust" ] && [ "$(TAURI_BUILD)" = "true" ]; then \
-			make --directory=$$module aw-sync SKIP_WEBUI=$(SKIP_WEBUI) || { echo "Error in $$module aw-sync"; exit 2; }; \
+			AW_WEBUI_DIR="$(AW_WEBUI_DIR)" make --directory=$$module aw-sync SKIP_WEBUI=$(SKIP_WEBUI) || { echo "Error in $$module aw-sync"; exit 2; }; \
 		else \
-			make --directory=$$module build SKIP_WEBUI=$(SKIP_WEBUI) || { echo "Error in $$module build"; exit 2; }; \
+			AW_WEBUI_DIR="$(AW_WEBUI_DIR)" make --directory=$$module build SKIP_WEBUI=$(SKIP_WEBUI) || { echo "Error in $$module build"; exit 2; }; \
 		fi; \
 	done
 #   The below is needed due to: https://github.com/ActivityWatch/activitywatch/issues/173
@@ -133,6 +139,9 @@ test:
 		poetry run make -C $$module test || { echo "Error in $$module tests"; exit 2; }; \
     done
 
+test-dashboard:
+	./scripts/tests/run_dashboard_subset.sh
+
 test-integration:
 	# TODO: Move "integration tests" to aw-client
 	# FIXME: For whatever reason the script stalls on Appveyor
@@ -142,12 +151,12 @@ test-integration:
 	@pytest ./scripts/tests/integration_tests.py ./aw-server/tests/ -v
 
 prepare-frontend:
-	./scripts/release/sync_frontend_static.sh
+	./scripts/release/sync_frontend_static.sh "$(FRONTEND_DIR)" "$(AW_WEBUI_DIR)"
 
 ifeq ($(TAURI_BUILD),true)
-	ICON := "aw-tauri/src-tauri/icons/icon.png"
+ICON := "aw-tauri/src-tauri/icons/icon.png"
 else
-	ICON := "aw-qt/media/logo/logo.png"
+ICON := "aw-qt/media/logo/logo.png"
 endif
 
 aw-qt/media/logo/logo.icns:

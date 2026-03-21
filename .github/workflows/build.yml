@@ -82,8 +82,8 @@ jobs:
       - name: Install Python tooling
         run: pip3 install poetry==1.4.2
 
-      - name: Build frontend and sync static assets
-        run: ./scripts/release/sync_frontend_static.sh frontend-source
+      - name: Build frontend artifact
+        run: make prepare-frontend FRONTEND_DIR=frontend-source
 
       - name: Build application bundle
         run: |

@@ -1,3 +1,8 @@
+.PHONY: build dev frontend-artifact prebuild precommit format check package node_modules
+
+AW_WEBUI_DIR ?= $(abspath ../build/frontend-artifact)
+ICON_SOURCE ?= ../aw-qt/media/logo/logo.png
+
 ifeq ($(shell uname -m), arm64)
 	ARCH := _arm64
 else
@@ -6,22 +11,27 @@ endif
 OS := $(shell uname -s)
 
 build: prebuild
-	npm run tauri build
+	AW_WEBUI_DIR="$(AW_WEBUI_DIR)" npm run tauri build
 
 dev: prebuild
-	npm run tauri dev
+	AW_WEBUI_DIR="$(AW_WEBUI_DIR)" npm run tauri dev
 
-%/.git:
-	git submodule update --init --recursive
-
-src-tauri/icons/icon.png: aw-webui/.git
+src-tauri/icons/icon.png:
 	mkdir -p src-tauri/icons
-	npm run tauri icon "./aw-webui/media/logo/logo.png"
+	npm run tauri icon "$(ICON_SOURCE)"
 
-aw-webui/dist: aw-webui/.git
-	cd aw-webui && make build
+frontend-artifact:
+	@mkdir -p "$(AW_WEBUI_DIR)"
+	@if [ -f "$(AW_WEBUI_DIR)/index.html" ]; then \
+		echo "Using frontend artifact from $(AW_WEBUI_DIR)"; \
+	elif [ "$(SKIP_WEBUI)" = "true" ]; then \
+		echo "Skipping frontend artifact generation; expected built assets at $(AW_WEBUI_DIR)"; \
+	else \
+		echo "Frontend artifact not found at $(AW_WEBUI_DIR). Run 'make -C .. prepare-frontend' or set AW_WEBUI_DIR." >&2; \
+		exit 1; \
+	fi
 
-prebuild: aw-webui/dist node_modules src-tauri/icons/icon.png
+prebuild: frontend-artifact node_modules src-tauri/icons/icon.png
 
 precommit: format check
 
@@ -29,7 +39,7 @@ format:
 	cd src-tauri && cargo fmt
 
 check:
-	cd src-tauri && cargo check && cargo clippy
+	cd src-tauri && AW_WEBUI_DIR="$(AW_WEBUI_DIR)" cargo check && AW_WEBUI_DIR="$(AW_WEBUI_DIR)" cargo clippy
 
 package:
 ifeq ($(OS),Linux)

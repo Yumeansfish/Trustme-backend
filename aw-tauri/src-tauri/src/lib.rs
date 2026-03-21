@@ -468,7 +468,7 @@ pub fn run() {
                 let asset_path_opt = if let Ok(path_str) = &webui_var {
                     let asset_path = PathBuf::from(&path_str);
                     if asset_path.exists() {
-                        info!("Using webui path: {}", path_str);
+                        info!("Using frontend artifact path: {}", path_str);
                         Some(asset_path)
                     } else {
                         panic!("Path set via env var AW_WEBUI_DIR does not exist");

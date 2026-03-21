@@ -38,19 +38,21 @@ Benefits of Tauri:
 To run:
 
 ```sh
-npm install
+make -C .. prepare-frontend FRONTEND_DIR=../frontend
 make dev
 ```
 To build:
 
 ```sh
+make -C .. prepare-frontend FRONTEND_DIR=../frontend
 make build
 ```
 
 # Repo stucture
 
- - The frontend is in the root folder (NOTE: not yet the actual aw-webui code)
- - All rust code is in `src-tauri/` (will likely be moved)
+ - Desktop packaging lives in the repo root.
+ - The bundled Rust app lives in `src-tauri/`.
+ - Frontend assets are consumed from a built artifact, not from an embedded frontend source tree.
 
 # Roadmap
 
@@ -70,7 +72,7 @@ Secondary goal is to add extras supported by Tauri (updater, autostart).
  - [x] Polish
      - [x] Remove placeholder Vue app
          - Or replace with new UI for module management? (a bit redundant)
-     - [x] Build aw-webui as part of build process
+ - [x] Consume a built frontend artifact in the desktop app flow
      - [x] Error dialog when module crashes, restart logic
          - https://tauri.app/plugin/dialog/
      - [x] https://tauri.app/plugin/autostart/

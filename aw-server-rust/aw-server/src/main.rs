@@ -127,7 +127,7 @@ async fn main() -> Result<(), rocket::Error> {
     info!("Using DB at path {:?}", db_path);
 
     let asset_path = opts.webpath.map(|webpath| PathBuf::from(webpath));
-    info!("Using aw-webui assets at path {:?}", asset_path);
+    info!("Using frontend artifact assets at path {:?}", asset_path);
 
     // Only use legacy import if opts.dbpath is not set
     let legacy_import = !opts.no_legacy_import && opts.dbpath.is_none();

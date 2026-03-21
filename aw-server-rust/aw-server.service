@@ -2,7 +2,7 @@
 # aw-server-rust.service #
 ##########################
 #
-# 1. Build and package aw-server-rust and aw-webui with "make"
+# 1. Build and package aw-server-rust and the frontend artifact with "make"
 # 2. Install aw-server-rust with "sudo make install"
 # 3. Run 'systemctl --user daemon-reload' to make systemd load in the new service file
 # 4. Run 'systemctl --user start aw-server-rust.service' to start aw-server-rust

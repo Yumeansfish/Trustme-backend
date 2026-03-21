@@ -1,21 +1,22 @@
-.PHONY: aw-webui build install test typecheck package clean
+.PHONY: frontend-artifact build install test typecheck package clean
 
-build: aw-webui
+AW_WEBUI_DIR ?= $(abspath ../build/frontend-artifact)
+
+build: frontend-artifact
 	poetry install
 
-aw-webui:
+frontend-artifact:
 	mkdir -p aw_server/static/
-ifeq ($(SKIP_WEBUI),true) # Skip building webui if SKIP_WEBUI is true
-	@echo "Skipping building webui"
-else
-	rm -rf aw_server/static/*
-	make --directory=aw-webui build DEV=$(DEV)
-	cp -r aw-webui/dist/* aw_server/static/
-	# Needed for https://github.com/ActivityWatch/activitywatch/pull/274, works around https://github.com/pypa/pip/issues/6279
-	# https://github.com/ActivityWatch/activitywatch/pull/367 Other solutions have been tried but did not actually work.
-	# If you aren't sure windows long paths are working, don't remove this
-	rm -rf aw-webui/node_modules/.cache
-endif
+	@if [ -f "$(AW_WEBUI_DIR)/index.html" ]; then \
+		rm -rf aw_server/static/*; \
+		cp -R "$(AW_WEBUI_DIR)"/. aw_server/static/; \
+		echo "Synced frontend artifact from $(AW_WEBUI_DIR)"; \
+	elif [ "$(SKIP_WEBUI)" = "true" ]; then \
+		echo "Skipping frontend artifact generation; expected built assets at $(AW_WEBUI_DIR)"; \
+	else \
+		echo "Frontend artifact not found at $(AW_WEBUI_DIR). Run 'make -C .. prepare-frontend' or set AW_WEBUI_DIR." >&2; \
+		exit 1; \
+	fi
 
 install:
 	cp misc/aw-server.service /usr/lib/systemd/user/aw-server.service
@@ -55,4 +56,3 @@ clean:
 	rm -rf aw_server/__pycache__
 	rm -rf aw_server/static/*
 	pip3 uninstall -y aw_server
-	make --directory=aw-webui clean
