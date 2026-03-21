@@ -49,7 +49,8 @@ pub fn setup_logger(module: &str, testing: bool, verbose: bool) -> Result<(), fe
     if !is_debug {
         dispatch = dispatch
             .level_for("rocket", log::LevelFilter::Warn)
-            // rocket_cors has a lot of unhelpful info messages that spam the log on every request
+            // rocket_cors has a lot of unhelpful info messages that spam the log on every request.
+            // This is tracked in an upstream issue:
             // https://github.com/ActivityWatch/activitywatch/issues/975
             .level_for("rocket_cors", log::LevelFilter::Warn)
             .level_for("_", log::LevelFilter::Warn) // Rocket requests

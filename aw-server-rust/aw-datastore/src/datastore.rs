@@ -27,7 +27,8 @@ fn _get_db_version(conn: &Connection) -> i32 {
  * 0: Uninitialized database
  * 1: Initialized database
  * 2: Added 'data' field to 'buckets' table
- * 3: see: https://github.com/ActivityWatch/aw-server-rust/pull/52
+ * 3: introduced by an upstream rust-server migration:
+ *    https://github.com/ActivityWatch/aw-server-rust/pull/52
  * 4: Added 'key_value' table for storing key - value pairs
  */
 static NEWEST_DB_VERSION: i32 = 4;
@@ -128,7 +129,9 @@ fn _migrate_v1_to_v2(conn: &Connection) {
 }
 
 fn _migrate_v2_to_v3(conn: &Connection) {
-    // For details about why this migration was necessary, see: https://github.com/ActivityWatch/aw-server-rust/pull/52
+    // For details about why this migration was necessary, see the upstream
+    // rust-server migration discussion:
+    // https://github.com/ActivityWatch/aw-server-rust/pull/52
     info!("Upgrading database to v3, replacing the broken data field for buckets");
 
     // Rename column, marking it as deprecated

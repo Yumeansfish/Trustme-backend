@@ -1,8 +1,7 @@
 # Contributing
 
-Trust-me is no longer developed as the upstream ActivityWatch monorepo. This
-repository should use its own issue tracker, release flow, and contribution
-rules.
+Trust-me is maintained in its own repositories with its own issue tracker,
+release flow, and contribution rules.
 
 ## Before you start
 
