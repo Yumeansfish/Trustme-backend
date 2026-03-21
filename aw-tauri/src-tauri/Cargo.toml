@@ -1,10 +1,10 @@
 [package]
 name = "aw-tauri"
 version = "0.1.0"
-description = "ActivityWatch UI built with Tauri"
-authors = ["Erik Bjäreholt <erik@bjareho.lt>", "Brian Vuku <brayo@brayo.dev>"]
+description = "Trust-me desktop shell built with Tauri"
+authors = ["Trust-me contributors"]
 license = "MPL-2.0"
-repository = "https://github.com/ActivityWatch/aw-tauri"
+repository = "https://github.com/Yumeansfish/Trustme-backend"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html

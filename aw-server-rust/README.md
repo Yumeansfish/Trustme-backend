@@ -1,51 +1,37 @@
 aw-server-rust
 ==============
 
-[![Build Status](https://github.com/ActivityWatch/aw-server-rust/workflows/Build/badge.svg?branch=master)](https://github.com/ActivityWatch/aw-server-rust/actions?query=workflow%3ABuild+branch%3Amaster)
-[![Coverage Status](https://codecov.io/gh/ActivityWatch/aw-server-rust/branch/master/graph/badge.svg)](https://codecov.io/gh/ActivityWatch/aw-server-rust)
-[![Dependency Status](https://deps.rs/repo/github/activitywatch/aw-server-rust/status.svg)](https://deps.rs/repo/github/activitywatch/aw-server-rust)
+Rust server components used by the Trust-me backend workspace.
 
-A reimplementation of aw-server in Rust.
+## Build
 
-Features missing compared to the Python implementation of aw-server:
-
- - API explorer (Swagger/OpenAPI)
-
-### How to compile
-
-Build with `cargo`:
+With Cargo:
 
 ```sh
 cargo build --release
 ```
 
-You can also build with make after preparing a frontend artifact:
+Or through the repo-level build after preparing frontend assets:
 
-```
+```sh
 make -C .. prepare-frontend FRONTEND_DIR=../frontend
 make build
 ```
 
-`aw-server-rust` consumes a built frontend artifact from `../build/frontend-artifact` by default.
-Set `AW_WEBUI_DIR=/absolute/path/to/dist` if you want to point it at a different build output.
+`aw-server-rust` consumes a built frontend artifact from
+`../build/frontend-artifact` by default. Set `AW_WEBUI_DIR=/absolute/path/to/dist`
+if you want to point it at a different frontend build output.
 
-Your built executable will be located in `./target/release/aw-server-rust`. If you want to use it with a development version of `aw-qt` you'll want to copy this binary into your `venv`:
+## Run
 
-```shell
-cp target/release/aw-server ../venv/bin/aw-server-rust
-```
-
-
-### How to run
-
-If you want to quick-compile for debugging, run cargo run from the project root:
+For a quick local run:
 
 ```sh
 cargo run --bin aw-server
 ```
 
-*NOTE:* This will start aw-server-rust in testing mode (on port 5666 instead of port 5600).
+That starts the Rust server in testing mode.
 
-### Syncing
+## Sync
 
-For details about aw-sync-rust, see the [README](./aw-sync/README.md) in its subdirectory.
+See [aw-sync/README.md](./aw-sync/README.md) for sync-specific details.

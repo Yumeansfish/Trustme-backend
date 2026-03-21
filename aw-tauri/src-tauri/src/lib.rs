@@ -509,7 +509,7 @@ pub fn run() {
 
                 let open = MenuItem::with_id(app, "open", "Open Dashboard", true, None::<&str>)
                     .expect("Failed to create open menu item");
-                let quit = MenuItem::with_id(app, "quit", "Quit ActivityWatch", true, None::<&str>)
+                let quit = MenuItem::with_id(app, "quit", "Quit Trust-me", true, None::<&str>)
                     .expect("Failed to create quit menu item");
 
                 let menu =
@@ -534,7 +534,7 @@ pub fn run() {
                     )
                     .menu(&menu)
                     .show_menu_on_left_click(true)
-                    .tooltip("ActivityWatch");
+                    .tooltip("Trust-me");
                 let tray = tray_builder.build(app).expect("Failed to create tray");
 
                 init_tray_id(tray.id().clone());
