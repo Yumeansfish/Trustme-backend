@@ -1,11 +1,11 @@
 [package]
 name = "awatcher"
-description = "An activity and idle watcher based on ActivityWatch"
+description = "Linux activity and idle watcher for Trust-me"
 version = { workspace = true }
-authors = ["Demmie <2e3s19@gmail.com>"]
+authors = ["Trust-me contributors"]
 edition = "2021"
 license = "MPL-2.0"
-repository = "https://github.com/2e3s/awatcher"
+repository = "https://github.com/Yumeansfish/Trustme-backend"
 
 [[bin]]
 name = "awatcher"
@@ -55,7 +55,7 @@ bundle = ["ksni", "aw-server", "aw-datastore", "open", "serde"]
 [package.metadata.deb.variants.module]
 name = "aw-awatcher"
 extended-description = """\
-Awatcher is a window activity and idle watcher for ActivityWatch.
+Awatcher is a window activity and idle watcher for Trust-me.
 The goal is to compensate the fragmentation of desktop environments on Linux by supporting all reportable environments with both Wayland and X11.
 """
 assets = [

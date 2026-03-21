@@ -1,21 +1,21 @@
 {
   "name": "aw-watcher-input-vis",
   "version": "1.0.0",
-  "description": "",
+  "description": "Experimental visualization assets for Trust-me input activity",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ActivityWatch/aw-watcher-input.git"
+    "url": "git+https://github.com/Yumeansfish/Trustme-backend.git"
   },
-  "author": "",
+  "author": "Trust-me contributors",
   "license": "MPL-2.0",
   "bugs": {
-    "url": "https://github.com/ActivityWatch/aw-watcher-input/issues"
+    "url": "https://github.com/Yumeansfish/Trustme-backend/issues"
   },
-  "homepage": "https://github.com/ActivityWatch/aw-watcher-input#readme",
+  "homepage": "https://github.com/Yumeansfish/Trustme-backend#readme",
   "dependencies": {
     "aw-client": "^0.3.0"
   }
