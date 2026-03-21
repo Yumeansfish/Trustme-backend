@@ -25,7 +25,10 @@ list.
 
 ## Notes
 
-- The default sync directory is still `~/ActivityWatchSync` for compatibility.
+- Fresh installs now default to `~/TrustMeSync`.
+- If an existing `~/ActivityWatchSync` directory is already present and no
+  Trust-me sync root exists yet, `aw-sync` will keep using the legacy path
+  automatically.
 - The currently maintained release path for Trust-me is documented in the top-level
   backend README and workflow files.
 - Treat this crate as workspace-internal unless Trust-me explicitly documents a

@@ -3,12 +3,30 @@ use std::error::Error;
 use std::fs;
 use std::path::PathBuf;
 
+const TRUST_ME_CONFIG_ROOT: &str = "trust-me";
+const LEGACY_CONFIG_ROOT: &str = "activitywatch";
+const TRUST_ME_SYNC_ROOT: &str = "TrustMeSync";
+const LEGACY_SYNC_ROOT: &str = "ActivityWatchSync";
+
+fn prefer_root(primary: PathBuf, legacy: PathBuf) -> PathBuf {
+    if primary.exists() {
+        primary
+    } else if legacy.exists() {
+        legacy
+    } else {
+        primary
+    }
+}
+
 // TODO: This could be refactored to share logic with aw-server/src/dirs.rs
 // TODO: add proper config support
 #[allow(dead_code)]
 pub fn get_config_dir() -> Result<PathBuf, Box<dyn Error>> {
-    let mut dir = appdirs::user_config_dir(Some("activitywatch"), None, false)
+    let primary = appdirs::user_config_dir(Some(TRUST_ME_CONFIG_ROOT), None, false)
         .map_err(|_| "Unable to read user config dir")?;
+    let legacy = appdirs::user_config_dir(Some(LEGACY_CONFIG_ROOT), None, false)
+        .map_err(|_| "Unable to read user config dir")?;
+    let mut dir = prefer_root(primary, legacy);
     dir.push("aw-sync");
     fs::create_dir_all(dir.clone())?;
     Ok(dir)
@@ -29,5 +47,8 @@ pub fn get_sync_dir() -> Result<PathBuf, Box<dyn Error>> {
         return Ok(PathBuf::from(dir));
     }
     let home_dir = home_dir().ok_or("Unable to read home_dir")?;
-    Ok(home_dir.join("ActivityWatchSync"))
+    Ok(prefer_root(
+        home_dir.join(TRUST_ME_SYNC_ROOT),
+        home_dir.join(LEGACY_SYNC_ROOT),
+    ))
 }

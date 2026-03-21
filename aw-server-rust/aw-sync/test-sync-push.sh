@@ -13,7 +13,11 @@ else
 fi
 
 # TODO: Fetch in a cross-platform way (from aw-client command output?)
-AWSERVERCONF=~/.config/activitywatch/aw-server/aw-server.toml
+AWSERVERCONF=~/.config/trust-me/aw-server/aw-server.toml
+LEGACY_AWSERVERCONF=~/.config/activitywatch/aw-server/aw-server.toml
+if [ ! -f "$AWSERVERCONF" ] && [ -f "$LEGACY_AWSERVERCONF" ]; then
+    AWSERVERCONF="$LEGACY_AWSERVERCONF"
+fi
 
 # trim everything in file AWSERVERCONF before '[server-testing]' section
 # grep for the aw-server port in aw-server.toml
@@ -24,7 +28,15 @@ else
     PORT=5600
 fi
 
-SYNCDIR="$HOME/ActivityWatchSync/$HOSTNAME"
+TRUSTME_SYNCDIR="$HOME/TrustMeSync/$HOSTNAME"
+LEGACY_SYNCDIR="$HOME/ActivityWatchSync/$HOSTNAME"
+if [ -d "$HOME/TrustMeSync" ]; then
+    SYNCDIR="$TRUSTME_SYNCDIR"
+elif [ -d "$HOME/ActivityWatchSync" ]; then
+    SYNCDIR="$LEGACY_SYNCDIR"
+else
+    SYNCDIR="$TRUSTME_SYNCDIR"
+fi
 AWSYNC_ARGS="--port $PORT"
 AWSYNC_ARGS_ADV="--sync-dir $SYNCDIR"
 

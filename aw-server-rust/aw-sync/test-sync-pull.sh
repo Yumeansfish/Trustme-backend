@@ -12,16 +12,24 @@ PORT=5667
 
 # if server already running on port 5667, don't start again
 if [ "$(lsof -i:$PORT -sTCP:LISTEN -t)" ]; then
-    echo "ActivityWatch server already running on port $PORT, using that."
+    echo "Trust-me server already running on port $PORT, using that."
 else
-    # Set up an isolated ActivityWatch instance
+    # Set up an isolated Trust-me instance
     ./test-server.sh $PORT &
     SERVER_PID=$!
 fi
 
 
 sleep 1;
-SYNCROOTDIR="$HOME/ActivityWatchSync"
+TRUSTMESYNCROOT="$HOME/TrustMeSync"
+LEGACYSYNCROOT="$HOME/ActivityWatchSync"
+if [ -d "$TRUSTMESYNCROOT" ]; then
+    SYNCROOTDIR="$TRUSTMESYNCROOT"
+elif [ -d "$LEGACYSYNCROOT" ]; then
+    SYNCROOTDIR="$LEGACYSYNCROOT"
+else
+    SYNCROOTDIR="$TRUSTMESYNCROOT"
+fi
 
 
 function sync_host() {

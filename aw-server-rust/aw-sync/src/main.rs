@@ -47,7 +47,8 @@ struct Opts {
     testing: bool,
 
     /// Full path to sync directory.
-    /// If not specified, use AW_SYNC_DIR env var, or default to ~/ActivityWatchSync
+    /// If not specified, use AW_SYNC_DIR env var, or default to ~/TrustMeSync.
+    /// Existing legacy ~/ActivityWatchSync installs are still detected automatically.
     #[clap(long)]
     sync_dir: Option<PathBuf>,
 
