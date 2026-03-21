@@ -20,9 +20,8 @@ repo. It is not part of the runtime application surface.
 ## Packaging and CI helpers
 
 - `package/`
-- `ci/`
 
-These scripts support packaging and release environments. They are not runtime
+These scripts support packaging environments. They are not runtime
 dependencies, but they are intentionally kept while the packaging surface
 exists.
 
