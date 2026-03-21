@@ -43,11 +43,6 @@ version=$(get_version)
 arch=$(get_arch)
 echo "Platform: $platform, arch: $arch, version: $version"
 
-# For Tauri Linux builds, include helper scripts and README
-if [[ $platform == "linux" && $TAURI_BUILD == "true" ]]; then
-    cp scripts/package/README.txt scripts/package/move-to-aw-modules.sh dist/activitywatch/
-fi
-
 function build_zip() {
     echo "Zipping executables..."
     pushd dist;
@@ -94,4 +89,3 @@ echo "-------------------------------------"
 echo "Contents of ./dist"
 ls -l dist
 echo "-------------------------------------"
-
