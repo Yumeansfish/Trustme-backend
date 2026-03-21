@@ -14,13 +14,13 @@ hourly_checkins = true
 # Enable or disable new day greeting notifications
 new_day_greetings = true
 
-# Enable or disable ActivityWatch server monitoring alerts
+# Enable or disable Trust-me server monitoring alerts
 server_monitoring = true
 
 # Category alerts configuration
 # Each alert monitors a specific category and sends notifications when thresholds are reached
 [[alerts]]
-category = "All"                                    # Category to monitor (must match ActivityWatch categories)
+category = "All"                                    # Category to monitor (must match Trust-me categories)
 label = "All"                                       # Display name in notifications
 thresholds_minutes = [60, 120, 240, 360, 480]     # Thresholds: 1h, 2h, 4h, 6h, 8h
 positive = false                                    # false = "Time spent" warnings, true = "Goal reached" achievements
@@ -87,7 +87,7 @@ positive = true                                     # Show as "Goal reached!" in
 # positive = false
 
 # Notes:
-# - Categories must match exactly what ActivityWatch reports
+# - Categories must match exactly what Trust-me reports
 # - Nested categories are fully supported using " > " separator (e.g., "Work > Programming > Rust")
 # - You can set alerts for both top-level categories (e.g., "Work") and nested categories (e.g., "Work > Programming")
 # - Threshold alerts use the full category hierarchy, so nested categories will be matched exactly
