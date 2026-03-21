@@ -6,7 +6,7 @@ use log::warn;
 use rand::Rng;
 use serde::{Deserialize, Serialize};
 
-use super::blocking::AwClient as ActivityWatchClient;
+use super::blocking::AwClient as ServerClient;
 
 pub type CategoryId = Vec<String>;
 
@@ -155,11 +155,11 @@ pub fn get_classes_from_server(host: &str, port: u16) -> Vec<(CategoryId, Catego
     let client_id = format!("get-setting-{}", random_int);
 
     // Create a client with a random ID, similar to the Python implementation
-    let awc = match ActivityWatchClient::new(host, port, &client_id) {
+    let awc = match ServerClient::new(host, port, &client_id) {
         Ok(client) => client,
         Err(_) => {
             warn!(
-                "Failed to create ActivityWatch client for {}:{}, using default classes",
+                "Failed to create server client for {}:{}, using default classes",
                 host, port
             );
             return default_classes();

@@ -42,7 +42,7 @@ struct Opts {
     #[clap(long)]
     dbpath: Option<String>,
 
-    /// Path to webui override
+    /// Path to frontend static assets override
     #[clap(long)]
     webpath: Option<String>,
 
@@ -54,7 +54,7 @@ struct Opts {
     #[clap(long)]
     device_id: Option<String>,
 
-    /// Don't import from aw-server-python if no aw-server-rust db found
+    /// Don't import from the legacy Python server if no aw-server-rust db found
     #[clap(long)]
     no_legacy_import: bool,
 }

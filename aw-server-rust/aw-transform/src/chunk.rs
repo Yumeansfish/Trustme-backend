@@ -3,9 +3,9 @@ use aw_models::Event;
 /// Chunks together events with the same key
 ///
 /// NOTE: In most cases you should use merge_events_by_keys instead, this
-/// transform is mostly just for backwards compatibility with older versions
-/// of aw-webui
-/// NOTE: Does not support sub-chunking which aw-server-python supports
+/// transform is mostly just for backwards compatibility with older frontend
+/// implementations.
+/// NOTE: Does not support sub-chunking which the legacy Python server supports
 /// Without sub-chunking it is pretty much the same as merge_events_by_key
 ///
 /// # Example

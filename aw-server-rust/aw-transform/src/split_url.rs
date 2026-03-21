@@ -62,7 +62,7 @@ pub fn split_url_event(event: &mut Event) {
         .data
         .insert("$params".to_string(), Value::String(params));
 
-    // TODO: aw-server-python also has options and identifier
+    // TODO: the legacy Python server also has options and identifier
 }
 
 #[cfg(test)]

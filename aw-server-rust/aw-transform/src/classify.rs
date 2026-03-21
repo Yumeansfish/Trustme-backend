@@ -66,7 +66,7 @@ impl From<Regex> for Rule {
 /// Categorizes a list of events
 ///
 /// An event can only have one category, although the category may have a hierarchy,
-/// for instance: "Work -> ActivityWatch -> aw-server-rust"
+/// for instance: "Work -> Trust-me -> aw-server-rust"
 /// If multiple categories match, the deepest one will be chosen.
 pub fn categorize(mut events: Vec<Event>, rules: &[(Vec<String>, Rule)]) -> Vec<Event> {
     let mut classified_events = Vec::new();
@@ -148,7 +148,8 @@ fn test_rule() {
 
 #[test]
 fn test_rule_lookahead() {
-    // Originally requested by a user here, to match aw-server-python: https://canary.discord.com/channels/755040852727955476/755334543891759194/994291987878522961
+    // Originally requested by a user here, to match the legacy Python server:
+    // https://canary.discord.com/channels/755040852727955476/755334543891759194/994291987878522961
     let mut e_match = Event::default();
     e_match
         .data
