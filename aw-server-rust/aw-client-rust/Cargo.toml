@@ -2,7 +2,7 @@
 name = "aw-client-rust"
 version = "0.1.0"
 edition = "2021"
-authors = ["Johan Bjäreholt <johan@bjareho.lt>"]
+authors = ["Trust-me contributors"]
 
 [dependencies]
 reqwest = { version = "0.11", features = ["json", "blocking"] }
