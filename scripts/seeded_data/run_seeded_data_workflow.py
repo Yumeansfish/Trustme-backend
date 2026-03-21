@@ -19,7 +19,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--server-url",
         default="http://127.0.0.1:5600/api/0",
-        help="Target ActivityWatch-compatible API base URL",
+        help="Target Trust-me-compatible dashboard API base URL",
     )
     parser.add_argument(
         "--demo-marker",

@@ -11,7 +11,7 @@ These scripts are intentionally separate from the backend runtime:
 ## Available scripts
 
 - `generate_2026_demo_data.py`
-  - generates reproducible 2026 dashboard data against a local ActivityWatch-compatible API
+  - generates reproducible 2026 dashboard data against a local Trust-me-compatible API
 - `run_seeded_data_workflow.py`
   - runs the seeded-data import and then rebuilds the relevant summary snapshots
 
