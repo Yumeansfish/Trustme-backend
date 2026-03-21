@@ -50,9 +50,9 @@ function build_zip() {
     echo "Name of package will be: $filename"
 
     if [[ $platform == "windows"* ]]; then
-        7z a $filename activitywatch;
+        7z a $filename trust-me;
     else
-        zip -r $filename activitywatch;
+        zip -r $filename trust-me;
     fi
     popd;
     echo "Zip built!"

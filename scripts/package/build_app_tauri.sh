@@ -14,13 +14,13 @@ if [[ "$(uname)" != "Darwin" ]]; then
     exit 1
 fi
 
-if [ ! -d "dist/activitywatch" ]; then
-    echo "Error: dist/activitywatch directory not found. Please build the project first."
+if [ ! -d "dist/trust-me" ]; then
+    echo "Error: dist/trust-me directory not found. Please build the project first."
     exit 1
 fi
 
-if [ ! -f "dist/activitywatch/aw-tauri" ]; then
-    echo "Error: aw-tauri binary not found in dist/activitywatch/"
+if [ ! -f "dist/trust-me/aw-tauri" ]; then
+    echo "Error: aw-tauri binary not found in dist/trust-me/"
     exit 1
 fi
 
@@ -32,11 +32,11 @@ echo "Creating app bundle structure..."
 mkdir -p "dist/${APP_NAME}.app/Contents/"{MacOS,Resources}
 
 echo "Copying aw-tauri as main executable..."
-cp "dist/activitywatch/aw-tauri" "dist/${APP_NAME}.app/Contents/MacOS/aw-tauri"
+cp "dist/trust-me/aw-tauri" "dist/${APP_NAME}.app/Contents/MacOS/aw-tauri"
 chmod +x "dist/${APP_NAME}.app/Contents/MacOS/aw-tauri"
 
 echo "Copying components to Resources..."
-for component in dist/activitywatch/*/; do
+for component in dist/trust-me/*/; do
     if [ -d "$component" ]; then
         component_name=$(basename "$component")
         echo "  Copying $component_name..."

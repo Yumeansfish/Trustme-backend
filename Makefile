@@ -190,31 +190,31 @@ dist/notarize:
 
 package:
 	rm -rf dist
-	mkdir -p dist/activitywatch
+	mkdir -p dist/trust-me
 	for dir in $(PACKAGEABLES); do \
 		make --directory=$$dir package; \
-		cp -r $$dir/dist/$$dir dist/activitywatch; \
+		cp -r $$dir/dist/$$dir dist/trust-me; \
 	done
 ifeq ($(TAURI_BUILD),true)
 # Copy aw-sync binary for Tauri builds
-	mkdir -p dist/activitywatch/aw-server-rust
-	cp aw-server-rust/target/$(targetdir)/aw-sync dist/activitywatch/aw-server-rust/aw-sync
+	mkdir -p dist/trust-me/aw-server-rust
+	cp aw-server-rust/target/$(targetdir)/aw-sync dist/trust-me/aw-server-rust/aw-sync
 else
 # Move aw-qt to the root of the dist folder
-	mv dist/activitywatch/aw-qt aw-qt-tmp
-	mv aw-qt-tmp/* dist/activitywatch
+	mv dist/trust-me/aw-qt aw-qt-tmp
+	mv aw-qt-tmp/* dist/trust-me
 	rmdir aw-qt-tmp
 endif
 # Remove problem-causing bundled system libraries
-	rm -f dist/activitywatch/libdrm.so.2
-	rm -f dist/activitywatch/libharfbuzz.so.0
+	rm -f dist/trust-me/libdrm.so.2
+	rm -f dist/trust-me/libharfbuzz.so.0
 # These should be provided by the distro itself
 # Had to be removed due to otherwise causing the error:
 #   aw-qt: symbol lookup error: /opt/activitywatch/libQt5XcbQpa.so.5: undefined symbol: FT_Get_Font_Format
-	rm -f dist/activitywatch/libfontconfig.so.1
-	rm -f dist/activitywatch/libfreetype.so.6
+	rm -f dist/trust-me/libfontconfig.so.1
+	rm -f dist/trust-me/libfreetype.so.6
 # Remove unnecessary files
-	rm -rf dist/activitywatch/pytz
+	rm -rf dist/trust-me/pytz
 # Builds zips and setups
 	bash scripts/package/package-all.sh
 
