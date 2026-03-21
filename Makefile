@@ -79,7 +79,7 @@ build:
 			AW_WEBUI_DIR="$(AW_WEBUI_DIR)" make --directory=$$module build SKIP_WEBUI=$(SKIP_WEBUI) || { echo "Error in $$module build"; exit 2; }; \
 		fi; \
 	done
-#   The below is needed due to: https://github.com/ActivityWatch/activitywatch/issues/173
+#   Rebuild shared client/core modules so the bundled server version stays consistent.
 	make --directory=aw-client build
 	make --directory=aw-core build
 #	Needed to ensure that the server has the correct version set
@@ -205,9 +205,9 @@ else
 	mv aw-qt-tmp/* dist/activitywatch
 	rmdir aw-qt-tmp
 endif
-# Remove problem-causing binaries
-	rm -f dist/activitywatch/libdrm.so.2       # see: https://github.com/ActivityWatch/activitywatch/issues/161
-	rm -f dist/activitywatch/libharfbuzz.so.0  # see: https://github.com/ActivityWatch/activitywatch/issues/660#issuecomment-959889230
+# Remove problem-causing bundled system libraries
+	rm -f dist/activitywatch/libdrm.so.2
+	rm -f dist/activitywatch/libharfbuzz.so.0
 # These should be provided by the distro itself
 # Had to be removed due to otherwise causing the error:
 #   aw-qt: symbol lookup error: /opt/activitywatch/libQt5XcbQpa.so.5: undefined symbol: FT_Get_Font_Format
