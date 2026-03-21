@@ -2,11 +2,9 @@
 # Makefile for the trust-me bundle
 # =====================================
 #
-# [GUIDE] How to install from source:
-#  - https://activitywatch.readthedocs.io/en/latest/installing-from-source.html
-#
 # We recommend creating and activating a Python virtualenv before building.
-# Instructions on how to do this can be found in the guide linked above.
+# The current supported build flow is the Trust-me repo workflow plus the
+# commands documented in this repository.
 .PHONY: build install test test-dashboard clean clean_all prepare-frontend
 
 SHELL := /usr/bin/env bash

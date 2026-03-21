@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# Build a macOS .app bundle for the Tauri-based ActivityWatch.
+# Build a macOS .app bundle for the Tauri-based Trust-me shell.
 # This replaces the PyInstaller-based bundling used by aw-qt.
 
 APP_NAME="trust-me"
