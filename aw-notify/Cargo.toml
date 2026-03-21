@@ -16,8 +16,8 @@ path = "src/main.rs"
 
 [dependencies]
 # Backend client crates
-aw-client-rust = {git = "https://github.com/ActivityWatch/aw-server-rust", branch="master"}
-aw-models = { git = "https://github.com/ActivityWatch/aw-server-rust.git", branch = "master" }
+aw-client-rust = { path = "../aw-server-rust/aw-client-rust" }
+aw-models = { path = "../aw-server-rust/aw-models" }
 
 # Command line interface
 clap = { version = "4.0", features = ["derive"] }
