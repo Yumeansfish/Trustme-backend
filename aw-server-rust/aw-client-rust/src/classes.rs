@@ -49,11 +49,11 @@ pub fn default_classes() -> Vec<(CategoryId, CategorySpec)> {
             vec![
                 "Work".to_string(),
                 "Programming".to_string(),
-                "ActivityWatch".to_string(),
+                "Trust-me".to_string(),
             ],
             CategorySpec {
                 spec_type: "regex".to_string(),
-                regex: "ActivityWatch|aw-".to_string(),
+                regex: "Trust-me|ActivityWatch|aw-".to_string(),
                 ignore_case: true,
             },
         ),
