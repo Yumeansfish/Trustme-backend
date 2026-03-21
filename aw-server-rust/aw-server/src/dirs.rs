@@ -14,11 +14,36 @@ lazy_static! {
 }
 
 #[cfg(not(target_os = "android"))]
-pub fn get_config_dir() -> Result<PathBuf, ()> {
-    let mut dir = appdirs::user_config_dir(Some("activitywatch"), None, false)?;
-    dir.push("aw-server-rust");
-    fs::create_dir_all(dir.clone()).expect("Unable to create config dir");
+const TRUST_ME_APP_NAME: &str = "trust-me";
+#[cfg(not(target_os = "android"))]
+const LEGACY_APP_NAME: &str = "activitywatch";
+
+#[cfg(not(target_os = "android"))]
+fn prefer_runtime_root(primary: PathBuf, legacy: PathBuf) -> PathBuf {
+    if primary.exists() {
+        primary
+    } else if legacy.exists() {
+        legacy
+    } else {
+        primary
+    }
+}
+
+#[cfg(not(target_os = "android"))]
+fn prepare_scoped_dir(primary_root: PathBuf, legacy_root: PathBuf, scope: &str) -> Result<PathBuf, ()> {
+    let mut dir = prefer_runtime_root(primary_root, legacy_root);
+    dir.push(scope);
+    fs::create_dir_all(dir.clone()).expect("Unable to create runtime dir");
     Ok(dir)
+}
+
+#[cfg(not(target_os = "android"))]
+pub fn get_config_dir() -> Result<PathBuf, ()> {
+    prepare_scoped_dir(
+        appdirs::user_config_dir(Some(TRUST_ME_APP_NAME), None, false)?,
+        appdirs::user_config_dir(Some(LEGACY_APP_NAME), None, false)?,
+        "aw-server-rust",
+    )
 }
 
 #[cfg(target_os = "android")]
@@ -28,10 +53,11 @@ pub fn get_config_dir() -> Result<PathBuf, ()> {
 
 #[cfg(not(target_os = "android"))]
 pub fn get_data_dir() -> Result<PathBuf, ()> {
-    let mut dir = appdirs::user_data_dir(Some("activitywatch"), None, false)?;
-    dir.push("aw-server-rust");
-    fs::create_dir_all(dir.clone()).expect("Unable to create data dir");
-    Ok(dir)
+    prepare_scoped_dir(
+        appdirs::user_data_dir(Some(TRUST_ME_APP_NAME), None, false)?,
+        appdirs::user_data_dir(Some(LEGACY_APP_NAME), None, false)?,
+        "aw-server-rust",
+    )
 }
 
 #[cfg(target_os = "android")]
@@ -41,10 +67,11 @@ pub fn get_data_dir() -> Result<PathBuf, ()> {
 
 #[cfg(not(target_os = "android"))]
 pub fn get_cache_dir() -> Result<PathBuf, ()> {
-    let mut dir = appdirs::user_cache_dir(Some("activitywatch"), None)?;
-    dir.push("aw-server-rust");
-    fs::create_dir_all(dir.clone()).expect("Unable to create cache dir");
-    Ok(dir)
+    prepare_scoped_dir(
+        appdirs::user_cache_dir(Some(TRUST_ME_APP_NAME), None)?,
+        appdirs::user_cache_dir(Some(LEGACY_APP_NAME), None)?,
+        "aw-server-rust",
+    )
 }
 
 #[cfg(target_os = "android")]
@@ -54,10 +81,11 @@ pub fn get_cache_dir() -> Result<PathBuf, ()> {
 
 #[cfg(not(target_os = "android"))]
 pub fn get_log_dir(module: &str) -> Result<PathBuf, ()> {
-    let mut dir = appdirs::user_log_dir(Some("activitywatch"), None)?;
-    dir.push(module);
-    fs::create_dir_all(dir.clone()).expect("Unable to create log dir");
-    Ok(dir)
+    prepare_scoped_dir(
+        appdirs::user_log_dir(Some(TRUST_ME_APP_NAME), None)?,
+        appdirs::user_log_dir(Some(LEGACY_APP_NAME), None)?,
+        module,
+    )
 }
 
 #[cfg(target_os = "android")]

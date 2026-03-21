@@ -18,11 +18,42 @@ lazy_static! {
 }
 
 #[cfg(not(target_os = "android"))]
-pub fn get_config_dir() -> Result<PathBuf, ()> {
-    let mut dir = appdirs::user_config_dir(Some("activitywatch"), None, false)?;
-    dir.push("aw-tauri");
-    fs::create_dir_all(dir.clone()).expect("Unable to create config dir");
+const TRUST_ME_APP_NAME: &str = "trust-me";
+#[cfg(not(target_os = "android"))]
+const LEGACY_APP_NAME: &str = "activitywatch";
+
+#[cfg(not(target_os = "android"))]
+fn prefer_runtime_root(primary: PathBuf, legacy: PathBuf) -> PathBuf {
+    if primary.exists() {
+        primary
+    } else if legacy.exists() {
+        legacy
+    } else {
+        primary
+    }
+}
+
+#[cfg(not(target_os = "android"))]
+fn prepare_scoped_dir(
+    primary_root: PathBuf,
+    legacy_root: PathBuf,
+    components: &[&str],
+) -> Result<PathBuf, ()> {
+    let mut dir = prefer_runtime_root(primary_root, legacy_root);
+    for component in components {
+        dir.push(component);
+    }
+    fs::create_dir_all(dir.clone()).expect("Unable to create runtime dir");
     Ok(dir)
+}
+
+#[cfg(not(target_os = "android"))]
+pub fn get_config_dir() -> Result<PathBuf, ()> {
+    prepare_scoped_dir(
+        appdirs::user_config_dir(Some(TRUST_ME_APP_NAME), None, false)?,
+        appdirs::user_config_dir(Some(LEGACY_APP_NAME), None, false)?,
+        &["aw-tauri"],
+    )
 }
 
 #[cfg(target_os = "android")]
@@ -32,34 +63,39 @@ pub fn get_config_dir() -> Result<PathBuf, ()> {
 
 #[cfg(not(target_os = "android"))]
 pub fn get_data_dir() -> Result<PathBuf, ()> {
-    let mut dir = appdirs::user_data_dir(Some("activitywatch"), None, false)?;
-    dir.push("aw-tauri");
-    fs::create_dir_all(dir.clone()).expect("Unable to create data dir");
-    Ok(dir)
+    prepare_scoped_dir(
+        appdirs::user_data_dir(Some(TRUST_ME_APP_NAME), None, false)?,
+        appdirs::user_data_dir(Some(LEGACY_APP_NAME), None, false)?,
+        &["aw-tauri"],
+    )
 }
 
 #[cfg(target_os = "android")]
 pub fn get_data_dir() -> Result<PathBuf, ()> {
-    Ok(ANDROID_DATA_DIR.lock()..expect("Unable to create data dir").to_path_buf())
+    Ok(ANDROID_DATA_DIR
+        .lock()
+        .expect("Unable to create data dir")
+        .to_path_buf())
 }
 
 #[cfg(all(not(target_os = "android"), target_os = "linux"))]
 pub fn get_log_dir() -> Result<PathBuf, ()> {
     // Linux uses cache dir for logs
-    let mut dir = appdirs::user_cache_dir(Some("activitywatch"), None)?;
-    dir.push("aw-tauri");
-    dir.push("log");
-    fs::create_dir_all(dir.clone()).expect("Unable to create log dir");
-    Ok(dir)
+    prepare_scoped_dir(
+        appdirs::user_cache_dir(Some(TRUST_ME_APP_NAME), None)?,
+        appdirs::user_cache_dir(Some(LEGACY_APP_NAME), None)?,
+        &["aw-tauri", "log"],
+    )
 }
 
 #[cfg(all(not(target_os = "android"), not(target_os = "linux")))]
 pub fn get_log_dir() -> Result<PathBuf, ()> {
     // Windows and macOS use dedicated log directories
-    let mut dir = appdirs::user_log_dir(Some("activitywatch"), None)?;
-    dir.push("aw-tauri");
-    fs::create_dir_all(dir.clone()).expect("Unable to create log dir");
-    Ok(dir)
+    prepare_scoped_dir(
+        appdirs::user_log_dir(Some(TRUST_ME_APP_NAME), None)?,
+        appdirs::user_log_dir(Some(LEGACY_APP_NAME), None)?,
+        &["aw-tauri"],
+    )
 }
 
 #[cfg(target_os = "android")]
@@ -83,16 +119,22 @@ pub fn get_log_path() -> PathBuf {
 pub fn get_runtime_dir() -> PathBuf {
     // Linux: use XDG_RUNTIME_DIR or fallback to cache dir
     if let Ok(runtime_dir) = std::env::var("XDG_RUNTIME_DIR") {
-        let mut dir = PathBuf::from(runtime_dir);
-        dir.push("activitywatch");
+        let primary = PathBuf::from(&runtime_dir).join(TRUST_ME_APP_NAME);
+        let legacy = PathBuf::from(&runtime_dir).join(LEGACY_APP_NAME);
+        let mut dir = prefer_runtime_root(primary, legacy);
         dir.push("aw-tauri");
-        if let Ok(_) = fs::create_dir_all(dir.clone()) {
+        if fs::create_dir_all(dir.clone()).is_ok() {
             return dir;
         }
     }
     // Fallback to cache dir
-    let mut dir = appdirs::user_cache_dir(Some("activitywatch"), None)
-        .unwrap_or_else(|_| PathBuf::from("/tmp"));
+    let primary_root =
+        appdirs::user_cache_dir(Some(TRUST_ME_APP_NAME), None).unwrap_or_else(|_| {
+            PathBuf::from("/tmp").join(TRUST_ME_APP_NAME)
+        });
+    let legacy_root = appdirs::user_cache_dir(Some(LEGACY_APP_NAME), None)
+        .unwrap_or_else(|_| PathBuf::from("/tmp").join(LEGACY_APP_NAME));
+    let mut dir = prefer_runtime_root(primary_root, legacy_root);
     dir.push("aw-tauri");
     let _ = fs::create_dir_all(dir.clone());
     dir

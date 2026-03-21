@@ -29,6 +29,8 @@ static AW_CLIENT: OnceLock<aw_client_rust::blocking::AwClient> = OnceLock::new()
 static HOSTNAME: OnceLock<String> = OnceLock::new();
 static SERVER_AVAILABLE: AtomicBool = AtomicBool::new(true);
 static OUTPUT_ONLY: AtomicBool = AtomicBool::new(false);
+const TRUST_ME_CONFIG_ROOT: &str = "trust-me";
+const LEGACY_CONFIG_ROOT: &str = "activitywatch";
 
 type CacheValue = (DateTime<Utc>, HashMap<String, f64>);
 static TIME_CACHE: Lazy<DashMap<String, CacheValue>> = Lazy::new(DashMap::new);
@@ -163,12 +165,29 @@ enum Commands {
 }
 
 // Configuration loading functions
-fn get_default_config_path() -> PathBuf {
+fn build_default_config_path(root_name: &str) -> PathBuf {
     let mut path = dirs::config_dir().unwrap_or_else(|| PathBuf::from("."));
-    path.push("activitywatch");
+    path.push(root_name);
     path.push("aw-notify");
     path.push("config.toml");
     path
+}
+
+fn config_parent_exists(path: &PathBuf) -> bool {
+    path.parent().map(|parent| parent.exists()).unwrap_or(false)
+}
+
+fn get_default_config_path() -> PathBuf {
+    let trust_me = build_default_config_path(TRUST_ME_CONFIG_ROOT);
+    let legacy = build_default_config_path(LEGACY_CONFIG_ROOT);
+
+    if config_parent_exists(&trust_me) {
+        trust_me
+    } else if config_parent_exists(&legacy) {
+        legacy
+    } else {
+        trust_me
+    }
 }
 
 fn load_config() -> Result<NotificationConfig> {

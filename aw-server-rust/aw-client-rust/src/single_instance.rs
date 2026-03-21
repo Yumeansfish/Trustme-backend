@@ -3,8 +3,12 @@ use fs4::fs_std::FileExt;
 use log::{debug, error};
 use std::fs::{File, OpenOptions};
 use std::io;
+use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
+
+const TRUST_ME_CACHE_ROOT: &str = "trust-me";
+const LEGACY_CACHE_ROOT: &str = "activitywatch";
 
 #[derive(Debug)]
 pub struct SingleInstance {
@@ -25,7 +29,7 @@ pub enum SingleInstanceError {
 impl SingleInstance {
     pub fn new(client_name: &str) -> Result<SingleInstance, SingleInstanceError> {
         let cache_dir = cache_dir().ok_or(SingleInstanceError::LockDirCreation)?;
-        let lock_dir = cache_dir.join("activitywatch").join("client_locks");
+        let lock_dir = prefer_lock_root(&cache_dir).join("client_locks");
         std::fs::create_dir_all(&lock_dir).map_err(|_| SingleInstanceError::LockDirCreation)?;
 
         let lockfile = lock_dir.join(client_name);
@@ -70,6 +74,19 @@ impl SingleInstance {
                 Err(e) => Err(SingleInstanceError::Io(e)),
             }
         }
+    }
+}
+
+fn prefer_lock_root(cache_dir: &Path) -> PathBuf {
+    let primary = cache_dir.join(TRUST_ME_CACHE_ROOT);
+    let legacy = cache_dir.join(LEGACY_CACHE_ROOT);
+
+    if primary.exists() {
+        primary
+    } else if legacy.exists() {
+        legacy
+    } else {
+        primary
     }
 }
 
