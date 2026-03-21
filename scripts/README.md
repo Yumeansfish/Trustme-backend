@@ -31,6 +31,11 @@ packaging helpers that are merely present in `package/` should not be assumed
 to be part of the current supported CI path unless they are wired into that
 workflow.
 
+Legacy standalone Linux packaging helpers have been retired from this repo's
+supported surface. If Linux release automation returns, it should be rebuilt
+around the current Trust-me packaging path instead of reviving the old
+ActivityWatch-era scripts.
+
 ## Historical cleanup boundary
 
 Inherited ActivityWatch release automation is tracked separately from this
