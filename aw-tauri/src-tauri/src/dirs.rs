@@ -128,12 +128,18 @@ pub fn get_discovery_paths() -> Vec<PathBuf> {
                 .unwrap_or_else(|_| home_path.join(".local").join("share"));
             discovery_paths.push(
                 data_dir
+                    .join("trust-me")
+                    .join("aw-tauri")
+                    .join("modules"),
+            );
+            discovery_paths.push(
+                data_dir
                     .join("activitywatch")
                     .join("aw-tauri")
                     .join("modules"),
             );
 
-            // Legacy path for backward compatibility
+            // Legacy paths for backward compatibility
             discovery_paths.push(home_path.join("aw-modules"));
         }
     }
@@ -143,6 +149,10 @@ pub fn get_discovery_paths() -> Vec<PathBuf> {
         // Windows: User-specific and system paths
         if let Ok(username) = std::env::var("USERNAME") {
             discovery_paths.push(PathBuf::from(format!(r"C:/Users/{}/aw-modules", username)));
+            discovery_paths.push(PathBuf::from(format!(
+                r"C:/Users/{}/AppData/Local/Programs/Trust-me",
+                username
+            )));
             discovery_paths.push(PathBuf::from(format!(
                 r"C:/Users/{}/AppData/Local/Programs/ActivityWatch",
                 username
@@ -156,6 +166,12 @@ pub fn get_discovery_paths() -> Vec<PathBuf> {
         if let Ok(home_dir) = std::env::var("HOME") {
             discovery_paths.push(PathBuf::from(home_dir).join("aw-modules"));
         }
+        discovery_paths.push(PathBuf::from(
+            "/Applications/Trust-me.app/Contents/MacOS",
+        ));
+        discovery_paths.push(PathBuf::from(
+            "/Applications/Trust-me.app/Contents/Resources",
+        ));
         discovery_paths.push(PathBuf::from(
             "/Applications/ActivityWatch.app/Contents/MacOS",
         ));
