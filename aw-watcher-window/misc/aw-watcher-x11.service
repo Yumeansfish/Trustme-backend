@@ -1,5 +1,5 @@
 [Unit]
-Description=X11 window watcher for ActivityWatch
+Description=X11 window watcher for Trust-me
 Documentation=
 After=aw-server.service
 

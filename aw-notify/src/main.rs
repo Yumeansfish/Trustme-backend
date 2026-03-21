@@ -116,8 +116,8 @@ impl Default for NotificationConfig {
 #[derive(Parser)]
 #[clap(
     name = "aw-notify",
-    about = "ActivityWatch notification service",
-    long_about = "ActivityWatch notification service\n\nProvides desktop notifications for time tracking data from ActivityWatch.\nUse --output-only to print notifications to stdout instead of showing desktop notifications (useful for scripting or integration with other tools(aw-tauri)).",
+    about = "Trust-me notification service",
+    long_about = "Trust-me notification service\n\nProvides desktop notifications for time tracking data from Trust-me.\nUse --output-only to print notifications to stdout instead of showing desktop notifications (useful for scripting or integration with other tools such as aw-tauri).",
     version
 )]
 struct Cli {
@@ -127,7 +127,7 @@ struct Cli {
     #[clap(long, help = "Testing mode (port 5666)")]
     testing: bool,
 
-    #[clap(long, help = "Port to connect to ActivityWatch server")]
+    #[clap(long, help = "Port to connect to the Trust-me server")]
     port: Option<u16>,
 
     #[clap(
@@ -803,7 +803,7 @@ fn send_initial_checkins() -> Result<()> {
                 "timestamp": Utc::now().to_rfc3339(),
                 "title": "Time yesterday",
                 "message": message_yesterday,
-                "app": "ActivityWatch",
+                "app": "Trust-me",
             });
             output.push_str(&serde_json::to_string(&notification_yesterday)?);
             output.push_str("\n\n\n\n");
@@ -825,7 +825,7 @@ fn send_initial_checkins() -> Result<()> {
                 "timestamp": Utc::now().to_rfc3339(),
                 "title": "Time today",
                 "message": message_today,
-                "app": "ActivityWatch",
+                "app": "Trust-me",
             });
             output.push_str(&serde_json::to_string(&notification_today)?);
             output.push_str("\n\n\n\n");
@@ -998,7 +998,7 @@ fn start_server_monitor(shutdown_rx: Receiver<()>) {
                 if current_status {
                     log::info!("Server is back online");
                     if let Err(e) =
-                        notify("Server Available", "ActivityWatch server is back online.")
+                        notify("Server Available", "Trust-me server is back online.")
                     {
                         log::error!("Failed to send server available notification: {}", e);
                     }
@@ -1006,7 +1006,7 @@ fn start_server_monitor(shutdown_rx: Receiver<()>) {
                     log::warn!("Server went offline");
                     if let Err(e) = notify(
                         "Server Unavailable",
-                        "ActivityWatch server is down. Data may not be saved!",
+                        "Trust-me server is down. Data may not be saved!",
                     ) {
                         log::error!("Failed to send server unavailable notification: {}", e);
                     }
@@ -1085,7 +1085,7 @@ fn notify(title: &str, message: &str) -> Result<()> {
             "timestamp": Utc::now().to_rfc3339(),
             "title": title,
             "message": message,
-            "app": "ActivityWatch",
+            "app": "Trust-me",
         });
 
         // Combine into one buffer and write once
@@ -1112,7 +1112,7 @@ fn notify(title: &str, message: &str) -> Result<()> {
     Notification::new()
         .summary(title)
         .body(message)
-        .appname("ActivityWatch")
+        .appname("Trust-me")
         .timeout(5000)
         .show()?;
 
@@ -1129,7 +1129,7 @@ fn try_terminal_notifier(title: &str, message: &str) -> Result<bool> {
             // terminal-notifier is available, use it
             let result = Command::new("terminal-notifier")
                 .arg("-title")
-                .arg("ActivityWatch")
+                .arg("Trust-me")
                 .arg("-subtitle")
                 .arg(title)
                 .arg("-message")

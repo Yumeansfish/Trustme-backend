@@ -1,5 +1,5 @@
 [Unit]
-Description=AFK watcher for ActivityWatch
+Description=AFK watcher for Trust-me
 Documentation=
 After=aw-server.service
 

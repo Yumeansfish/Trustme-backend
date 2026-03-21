@@ -1,7 +1,7 @@
 [package]
 name = "watchers"
 version = { workspace = true }
-authors = ["Demmie <2e3s19@gmail.com>"]
+authors = ["Trust-me contributors"]
 edition = "2021"
 
 [lib]
