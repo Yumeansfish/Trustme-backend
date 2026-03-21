@@ -1,25 +1,15 @@
 # Security Policy
 
-<!--
-## Supported Versions
-
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
-
-| Version    | Supported          |
-| ---------- | ------------------ |
-| 0.11.0     | :white_check_mark: |
-| <= 0.10.0  | :x:                |
--->
-
 ## Reporting a Vulnerability
 
-<!--
-Use this section to tell people how to report a vulnerability.
+If you discover a security issue in Trust-me, do not open a public bug report
+before the issue is understood and a fix is ready.
 
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
--->
+Instead:
 
-If you discover a vulnerability, please send a PGP encrypted email with details to [erik@bjareho.lt](mailto:erik@bjareho.lt) (preferably PGP encrypted using [this key](https://erik.bjareholt.com/erikbjare.asc)).
+- contact the repository maintainer privately through GitHub
+- include affected commit or release information when possible
+- include reproduction steps, impact, and any mitigation details you already know
+
+The current release surface is small and moves quickly, so reports should
+target the latest Trust-me release or the current `main` branch when possible.
