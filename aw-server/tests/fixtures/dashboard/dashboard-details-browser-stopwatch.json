@@ -1,0 +1,43 @@
+{
+  "browser": {
+    "domains": [
+      {
+        "timestamp": "2026-03-02T08:15:00+00:00",
+        "duration": 1800,
+        "data": {
+          "$domain": "docs.example.com"
+        }
+      }
+    ],
+    "urls": [
+      {
+        "timestamp": "2026-03-02T08:15:00+00:00",
+        "duration": 1800,
+        "data": {
+          "url": "https://docs.example.com/spec"
+        }
+      }
+    ],
+    "titles": [
+      {
+        "timestamp": "2026-03-02T08:15:00+00:00",
+        "duration": 1800,
+        "data": {
+          "title": "Spec Draft"
+        }
+      }
+    ],
+    "duration": 1800
+  },
+  "stopwatch": {
+    "stopwatch_events": [
+      {
+        "timestamp": "2026-03-02T10:30:00+00:00",
+        "duration": 600,
+        "data": {
+          "label": "Break"
+        }
+      }
+    ]
+  }
+}

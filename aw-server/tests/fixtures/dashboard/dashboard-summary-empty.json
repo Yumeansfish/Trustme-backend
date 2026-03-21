@@ -1,0 +1,18 @@
+{
+  "window": {
+    "app_events": [],
+    "title_events": [],
+    "cat_events": [],
+    "active_events": [],
+    "duration": 0
+  },
+  "by_period": {
+    "2026-03-01T10:00:00+00:00/2026-03-01T11:00:00+00:00": {
+      "cat_events": []
+    },
+    "2026-03-01T11:00:00+00:00/2026-03-01T12:00:00+00:00": {
+      "cat_events": []
+    }
+  },
+  "uncategorized_rows": []
+}

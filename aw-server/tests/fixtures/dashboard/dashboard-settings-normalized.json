@@ -1,0 +1,28 @@
+{
+  "_schema_version": 1,
+  "startOfDay": "09:00",
+  "startOfWeek": "Monday",
+  "durationDefault": 86400,
+  "useColorFallback": false,
+  "landingpage": "/activity",
+  "theme": "dark",
+  "always_active_pattern": "Zoom|Teams",
+  "classes": [
+    {
+      "name": ["Work", "Coding"],
+      "rule": {
+        "type": "regex",
+        "regex": "Code",
+        "ignore_case": true
+      }
+    }
+  ],
+  "categorizationKnowledgebaseVersion": 1,
+  "devmode": false,
+  "showYearly": false,
+  "useMultidevice": false,
+  "requestTimeout": 30,
+  "deviceMappings": {
+    "Office": ["alpha.local", "beta.local"]
+  }
+}

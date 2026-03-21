@@ -1,0 +1,14 @@
+{
+  "requested_hosts": ["alpha.local"],
+  "resolved_hosts": ["alpha.local", "beta.local"],
+  "window_buckets": [
+    "aw-watcher-window_alpha.local",
+    "aw-watcher-window_beta.local"
+  ],
+  "afk_buckets": [
+    "aw-watcher-afk_alpha.local",
+    "aw-watcher-afk_beta.local"
+  ],
+  "browser_buckets": ["aw-watcher-web-firefox"],
+  "stopwatch_buckets": ["aw-stopwatch"]
+}

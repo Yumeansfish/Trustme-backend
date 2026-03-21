@@ -1,0 +1,70 @@
+{
+  "window": {
+    "app_events": [
+      {
+        "timestamp": "2026-03-01T10:00:00+00:00",
+        "duration": 3600,
+        "data": {
+          "app": "Code"
+        }
+      },
+      {
+        "timestamp": "2026-03-01T11:15:00+00:00",
+        "duration": 900,
+        "data": {
+          "app": "Firefox"
+        }
+      }
+    ],
+    "title_events": [],
+    "cat_events": [
+      {
+        "timestamp": "2026-03-01T10:00:00+00:00",
+        "duration": 3600,
+        "data": {
+          "$category": ["Work", "Coding"]
+        }
+      },
+      {
+        "timestamp": "2026-03-01T11:15:00+00:00",
+        "duration": 900,
+        "data": {
+          "$category": ["Work", "Research"]
+        }
+      }
+    ],
+    "active_events": [
+      {
+        "timestamp": "2026-03-01T10:00:00+00:00",
+        "duration": 4500,
+        "data": {}
+      }
+    ],
+    "duration": 4500
+  },
+  "by_period": {
+    "2026-03-01T10:00:00+00:00/2026-03-01T11:00:00+00:00": {
+      "cat_events": [
+        {
+          "timestamp": "2026-03-01T10:00:00+00:00",
+          "duration": 3600,
+          "data": {
+            "$category": ["Work", "Coding"]
+          }
+        }
+      ]
+    },
+    "2026-03-01T11:00:00+00:00/2026-03-01T12:00:00+00:00": {
+      "cat_events": [
+        {
+          "timestamp": "2026-03-01T11:15:00+00:00",
+          "duration": 900,
+          "data": {
+            "$category": ["Work", "Research"]
+          }
+        }
+      ]
+    }
+  },
+  "uncategorized_rows": []
+}
