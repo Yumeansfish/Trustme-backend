@@ -11,10 +11,8 @@ use crate::sort_by_timestamp;
 ///  - Merging: merging adjacent or overlapping events that have the same data.
 ///     - This is sometimes done in conjunction with flooding, if events with nearby events have the same data.
 ///
-/// Upstream Python implementation:
-/// https://github.com/ActivityWatch/aw-core/blob/master/aw_transform/flood.py
-/// Alternate Python re-implementation using generators (different spec):
-/// https://github.com/ErikBjare/copilot-testing/blob/master/playground/flooding.py
+/// Ported from the upstream Python implementation, with an alternate generator
+///-based reference used during development.
 ///
 /// # Example
 ///

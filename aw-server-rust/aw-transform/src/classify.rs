@@ -1,7 +1,6 @@
 /// Transforms for classifying (tagging and categorizing) events.
 ///
-/// Based on upstream aw_research code:
-/// https://github.com/ActivityWatch/aw-research/blob/master/aw_research/classify.py
+/// Based on upstream aw_research classification logic.
 use aw_models::Event;
 use fancy_regex::Regex;
 

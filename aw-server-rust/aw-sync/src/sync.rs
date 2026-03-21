@@ -1,6 +1,5 @@
 /// Basic syncing for Trust-me-compatible event stores.
-/// Based on an upstream aw-server sync prototype:
-/// https://github.com/ActivityWatch/aw-server/pull/50
+/// Based on an upstream sync prototype.
 ///
 /// This does not handle any direct peer interaction/connections/networking, it works as a "bring your own folder synchronizer".
 ///

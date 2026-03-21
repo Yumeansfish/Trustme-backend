@@ -51,8 +51,7 @@ impl Tracker {
         self.set_idle(true);
     }
 
-    // The logic is rewritten from the legacy Python watcher implementation:
-    // https://github.com/ActivityWatch/aw-watcher-afk/blob/ef531605cd8238e00138bbb980e5457054e05248/aw_watcher_afk/afk.py#L73
+    // The logic is rewritten from the legacy Python watcher implementation.
     pub fn get_with_last_input(
         &mut self,
         now: DateTime<Utc>,

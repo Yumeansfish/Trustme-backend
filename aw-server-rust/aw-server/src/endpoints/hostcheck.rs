@@ -5,8 +5,7 @@
 //! If the Host header is not valid, the request will be rerouted to a
 //! BadRequest
 //!
-//! [1]: Upstream advisory:
-//! https://github.com/ActivityWatch/activitywatch/security/advisories/GHSA-v9fg-6g9j-h4x4
+//! [1]: The relevant upstream project has a published DNS-rebinding advisory.
 use rocket::fairing::Fairing;
 use rocket::http::uri::Origin;
 use rocket::http::{Method, Status};

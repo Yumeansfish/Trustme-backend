@@ -3,8 +3,7 @@ use chrono::{DateTime, Utc};
 
 /// Merges two eventlists and removes overlap, the first eventlist will have precedence
 ///
-/// Upstream aw-core implementation:
-/// https://github.com/ActivityWatch/aw-core/blob/master/aw_transform/union_no_overlap.py
+/// Ported from the upstream aw-core implementation.
 ///
 /// # Example
 /// ```ignore
