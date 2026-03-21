@@ -1,8 +1,8 @@
 [tool.poetry]
-name = "activitywatch"
+name = "trust-me-backend"
 version = "0.13.2"
-description = "The free and open-source automated time tracker. Cross-platform, extensible, privacy-focused."
-authors = ["Erik Bjäreholt <erik@bjareho.lt>", "Johan Bjäreholt <johan@bjareho.lt>"]
+description = "Backend bundle and packaging workspace for Trust-me."
+authors = ["Trust-me contributors"]
 license = "MPL-2.0"
 
 [tool.poetry.dependencies]
