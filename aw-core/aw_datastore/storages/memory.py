@@ -1,11 +1,11 @@
 import copy
+import logging
 import sys
 from datetime import datetime
 from typing import Dict, List, Optional
 
 from aw_core.models import Event
 
-from . import logger
 from .abstract import AbstractStorage
 
 
@@ -15,7 +15,7 @@ class MemoryStorage(AbstractStorage):
     sid = "memory"
 
     def __init__(self, testing: bool) -> None:
-        self.logger = logger.getChild(self.sid)
+        self.logger = logging.getLogger(__name__).getChild(self.sid)
         # self.logger.warning("Using in-memory storage, any events stored will not be persistent and will be lost when server is shut down. Use the --storage parameter to set a different storage method.")
         self.db: Dict[str, List[Event]] = {}
         self._metadata: Dict[str, dict] = dict()

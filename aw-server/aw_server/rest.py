@@ -1,4 +1,5 @@
 import json
+import logging
 import traceback
 from functools import wraps
 from threading import Lock
@@ -17,10 +18,11 @@ from flask import (
 )
 from flask_restx import Api, Resource, fields
 
-from . import logger
 from .api import ServerAPI
 from .dashboard_rest import dashboard_api
 from .exceptions import BadRequest, Unauthorized
+
+logger = logging.getLogger(__name__)
 
 
 def host_header_check(f):
