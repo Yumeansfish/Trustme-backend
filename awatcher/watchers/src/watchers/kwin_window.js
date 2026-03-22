@@ -1,3 +1,5 @@
+// Intentional JavaScript: this file is executed by the KWin scripting engine
+// after being embedded from Rust with include_str!, so it is not a TypeScript candidate.
 let connections = {};
 
 function send(client) {

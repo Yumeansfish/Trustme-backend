@@ -1,3 +1,5 @@
+// Intentional JavaScript: this is a tiny browserify-era experimental visualization,
+// not part of the main TypeScript-first product surface.
 const aw_client = require("aw-client");
 
 const url = new URL(window.location.href); // www.test.com/?filename=test
