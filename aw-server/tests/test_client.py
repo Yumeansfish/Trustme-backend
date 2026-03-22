@@ -104,7 +104,7 @@ def test_heartbeat_random_order(aw_client, bucket):
     for e in events:
         aw_client.heartbeat(bucket_id, e, pulsetime=2)
 
-    events = aw_client.get_events(bucket_id, limit=-1)
+    aw_client.get_events(bucket_id, limit=-1)
 
     # FIXME: This should pass
     # assert len(events) == 1

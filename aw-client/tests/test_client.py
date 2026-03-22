@@ -84,7 +84,7 @@ def test_full():
         # Test exception raising
         with pytest.raises(ValueError):
             # timeperiod end time does not have a timezone set
-            result = client.query(
+            client.query(
                 f'RETURN = query_bucket("{bucket_name}");',
                 timeperiods=[(now - timedelta(hours=1), datetime.now())],
             )

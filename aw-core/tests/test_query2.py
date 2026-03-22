@@ -206,7 +206,7 @@ def test_query2_return_value():
     # Nothing to return
     with pytest.raises(QueryParseException):
         example_query = "a=1"
-        result = query(qname, example_query, starttime, endtime, ds)
+        query(qname, example_query, starttime, endtime, ds)
 
 
 def test_query2_multiline():

@@ -6,7 +6,7 @@ logger = logging.getLogger(__name__)
 
 
 class VersionException(Exception):
-    ...
+    pass
 
 
 def _version_info_tuple() -> Tuple[int, int, int]:  # pragma: no cover
