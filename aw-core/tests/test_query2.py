@@ -31,38 +31,40 @@ class MockDatastore(MemoryStorage):
 mock_ds = MockDatastore(testing=True)
 
 
+def assert_token_parses_as(source: str, expected_token: str, expected_type, ns: Dict[str, Any]):
+    (parsed_type, parsed_token), remainder = _parse_token(source, ns)
+    assert remainder == ""
+    assert parsed_token == expected_token
+    assert parsed_type == expected_type
+
+
+def assert_dict_parse_error(source: str, ns: Dict[str, Any]):
+    with pytest.raises(QueryParseException):
+        QDict.parse(source, ns)
+
+
+def assert_list_parse_error(source: str, ns: Dict[str, Any]):
+    with pytest.raises(QueryParseException):
+        QList.parse(source, ns)
+
+
 def test_query2_test_token_parsing():
     ns: Dict[str, Any] = {}
-    (t, token), trash = _parse_token("123", ns)
-    assert token == "123"
-    assert t == QInteger
-    (t, token), trash = _parse_token('"test"', ns)
-    assert token == '"test"'
-    assert t == QString
-    (t, token), trash = _parse_token("'test'", ns)
-    assert token == "'test'"
-    assert t == QString
-    (t, token), trash = _parse_token("'te\\'st'", ns)
-    assert token == "'te\\'st'"
-    assert t == QString
-    (t, token), trash = _parse_token('"te\\"st"', ns)
-    assert token == '"te\\"st"'
-    assert t == QString
-    (t, token), trash = _parse_token("test0xDEADBEEF", ns)
-    assert token == "test0xDEADBEEF"
-    assert t == QVariable
-    (t, token), trash = _parse_token("test1337(')')", ns)
-    assert token == "test1337(')')"
-    assert t == QFunction
-    (t, token), trash = _parse_token("test1337('test\\'test',\"test\\\"test\")", ns)
-    assert token == "test1337('test\\'test',\"test\\\"test\")"
-    assert t == QFunction
-    (t, token), trash = _parse_token("[1, 'a', {}]", ns)
-    assert token == "[1, 'a', {}]"
-    assert t == QList
-    (t, token), trash = _parse_token("{'a': 1, 'b}': 2}", ns)
-    assert token == "{'a': 1, 'b}': 2}"
-    assert t == QDict
+    assert_token_parses_as("123", "123", QInteger, ns)
+    assert_token_parses_as('"test"', '"test"', QString, ns)
+    assert_token_parses_as("'test'", "'test'", QString, ns)
+    assert_token_parses_as("'te\\'st'", "'te\\'st'", QString, ns)
+    assert_token_parses_as('"te\\"st"', '"te\\"st"', QString, ns)
+    assert_token_parses_as("test0xDEADBEEF", "test0xDEADBEEF", QVariable, ns)
+    assert_token_parses_as("test1337(')')", "test1337(')')", QFunction, ns)
+    assert_token_parses_as(
+        "test1337('test\\'test',\"test\\\"test\")",
+        "test1337('test\\'test',\"test\\\"test\")",
+        QFunction,
+        ns,
+    )
+    assert_token_parses_as("[1, 'a', {}]", "[1, 'a', {}]", QList, ns)
+    assert_token_parses_as("{'a': 1, 'b}': 2}", "{'a': 1, 'b}': 2}", QDict, ns)
 
     assert _parse_token("", ns) == ((None, ""), "")
 
@@ -79,73 +81,51 @@ def test_query2_test_token_parsing():
 def test_dict():
     ds = mock_ds
     ns: Dict[str, Any] = {}
-    d_str = "{'a': {'a': {'a': 1}}, 'b': {'b\\'\"': ':'}}"
-    d = QDict.parse(d_str, ns)
+    parsed_dict = QDict.parse("{'a': {'a': {'a': 1}}, 'b': {'b\\'\"': ':'}}", ns)
     expected_res = {"a": {"a": {"a": 1}}, "b": {"b'\"": ":"}}
-    assert expected_res == d.interpret(ds, ns)
+    assert expected_res == parsed_dict.interpret(ds, ns)
 
     # Key in dict is not a string
-    with pytest.raises(QueryParseException):
-        d_str = "{b: 1}"
-        d = QDict.parse(d_str, ns)
+    assert_dict_parse_error("{b: 1}", ns)
 
     # Key in dict without a value
-    with pytest.raises(QueryParseException):
-        d_str = "{'test': }"
-        d = QDict.parse(d_str, ns)
+    assert_dict_parse_error("{'test': }", ns)
 
     # Char following key string is not a :
-    with pytest.raises(QueryParseException):
-        d_str = "{'test'p 1}"
-        d = QDict.parse(d_str, ns)
+    assert_dict_parse_error("{'test'p 1}", ns)
 
-    with pytest.raises(QueryParseException):
-        d_str = "{'test': #}"
-        d = QDict.parse(d_str, ns)
+    assert_dict_parse_error("{'test': #}", ns)
 
     # Semicolon without key
-    with pytest.raises(QueryParseException):
-        d_str = "{:}"
-        d = QDict.parse(d_str, ns)
+    assert_dict_parse_error("{:}", ns)
 
     # Trailing comma
-    with pytest.raises(QueryParseException):
-        d_str = "{'test':1,}"
-        d = QDict.parse(d_str, ns)
+    assert_dict_parse_error("{'test':1,}", ns)
 
 
 def test_list():
     ds = mock_ds
     ns: Dict[str, Any] = {}
-    l_str = "[1,2,[[3],4],5]"
-    ls = QList.parse(l_str, ns)
+    parsed_list = QList.parse("[1,2,[[3],4],5]", ns)
     expected_res = [1, 2, [[3], 4], 5]
-    assert expected_res == ls.interpret(ds, ns)
+    assert expected_res == parsed_list.interpret(ds, ns)
 
-    l_str = "['\\'',\"\\\"\"]"
-    ls = QList.parse(l_str, ns)
+    quoted_list = QList.parse("['\\'',\"\\\"\"]", ns)
     expected_res = ["'", '"']
-    assert expected_res == ls.interpret(ds, ns)
+    assert expected_res == quoted_list.interpret(ds, ns)
 
-    l_str = "[]"
-    ls = QList.parse(l_str, ns)
+    empty_list = QList.parse("[]", ns)
     expected_res = []
-    assert expected_res == ls.interpret(ds, ns)
+    assert expected_res == empty_list.interpret(ds, ns)
 
     # Comma without pre/post value
-    with pytest.raises(QueryParseException):
-        l_str = "[,]"
-        ls = QList.parse(l_str, ns)
+    assert_list_parse_error("[,]", ns)
 
     # Comma without post value
-    with pytest.raises(QueryParseException):
-        l_str = "[1,]"
-        ls = QList.parse(l_str, ns)
+    assert_list_parse_error("[1,]", ns)
 
     # Comma without pre value
-    with pytest.raises(QueryParseException):
-        l_str = "[,2]"
-        ls = QList.parse(l_str, ns)
+    assert_list_parse_error("[,2]", ns)
 
 
 def test_query2_bogus_query():

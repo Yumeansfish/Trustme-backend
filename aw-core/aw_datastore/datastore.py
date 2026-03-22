@@ -131,23 +131,12 @@ class Bucket:
         If several events are inserted, returns None. (This is due to there being no efficient way of getting ids out when doing bulk inserts with some datastores such as peewee/SQLite)
         """
 
-        # NOTE: Should we keep the timestamp checking?
-        warn_older_event = False
-
-        # Get last event for timestamp check after insert
-        if warn_older_event:
-            last_event_list = self.get(1)
-            last_event = None
-            if last_event_list:
-                last_event = last_event_list[0]
-
         now = datetime.now(tz=timezone.utc)
 
         inserted: Optional[Event] = None
 
         # Call insert
         if isinstance(events, Event):
-            oldest_event: Optional[Event] = events
             if events.timestamp + events.duration > now:
                 self.logger.warning(
                     f"Event inserted into bucket {self.bucket_id} reaches into the future. Current UTC time: {str(now)}. Event data: {str(events)}"
@@ -155,10 +144,6 @@ class Bucket:
             inserted = self.ds.storage_strategy.insert_one(self.bucket_id, events)
             # assert inserted
         elif isinstance(events, list):
-            if events:
-                oldest_event = sorted(events, key=lambda k: k["timestamp"])[0]
-            else:  # pragma: no cover
-                oldest_event = None
             for event in events:
                 if event.timestamp + event.duration > now:
                     self.logger.warning(
@@ -167,15 +152,6 @@ class Bucket:
             self.ds.storage_strategy.insert_many(self.bucket_id, events)
         else:
             raise TypeError
-
-        # Warn if timestamp is older than last event
-        if warn_older_event and last_event and oldest_event:
-            if oldest_event.timestamp < last_event.timestamp:  # pragma: no cover
-                self.logger.warning(
-                    f"""Inserting event that has a older timestamp than previous event!
-Previous: {last_event}
-Inserted: {oldest_event}"""
-                )
 
         return inserted
 

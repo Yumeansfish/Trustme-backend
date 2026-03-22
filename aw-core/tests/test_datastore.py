@@ -180,7 +180,8 @@ def test_delete(bucket_cm):
         assert num_events == len(fetched_events)
 
         # Test deleting event
-        assert bucket.delete(fetched_events[0]["id"])
+        deleted = bucket.delete(fetched_events[0]["id"])
+        assert deleted
 
         # Test deleting non-existent event
         # FIXME: Doesn't work due to lazy evaluation in SqliteDatastore

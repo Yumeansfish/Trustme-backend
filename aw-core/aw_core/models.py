@@ -3,6 +3,7 @@ import logging
 import numbers
 import typing
 from datetime import datetime, timedelta, timezone
+from functools import total_ordering
 from typing import (
     Any,
     Dict,
@@ -40,6 +41,7 @@ def _timestamp_parse(ts_in: ConvertibleTimestamp) -> datetime:
     return ts
 
 
+@total_ordering
 class Event(dict):
     """
     Used to represents an event.
