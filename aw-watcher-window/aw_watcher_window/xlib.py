@@ -1,4 +1,5 @@
 import logging
+from contextlib import suppress
 from typing import Optional
 
 import Xlib
@@ -48,10 +49,8 @@ def get_current_window() -> Optional[Window]:
     except Xlib.error.ConnectionClosedError:
         # when the X server closes the connection, we should exit
         # note that stdio is probably closed at this point, so we can't print anything (causes OSError)
-        try:
+        with suppress(OSError):
             logger.warning("X server closed connection, exiting")
-        except OSError:
-            pass
         raise FatalError()
 
 
@@ -83,7 +82,7 @@ def get_window_name(window: Window) -> str:
                     "I don't think this case will ever happen, but not sure so leaving this message here just in case."
                 )
                 return r.decode("latin1")  # WM_NAME with type=STRING.
-        except Xlib.error.BadWindow as e:
+        except Xlib.error.BadWindow:
             # I comment on the log, the number of messages that pop up is very annoying
             # Also, it does not give much information about the error
             # But I leave it in case someone sees it useful

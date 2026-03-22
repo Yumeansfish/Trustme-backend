@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import sys
-from contextlib import contextmanager
+from contextlib import contextmanager, suppress
 from datetime import datetime, timedelta, timezone
 from typing import Callable
 
@@ -27,10 +27,8 @@ def create_test_events(n):
 @contextmanager
 def temporary_bucket(ds):
     bucket_id = "test_bucket"
-    try:
+    with suppress(ValueError):
         ds.delete_bucket(bucket_id)
-    except ValueError:
-        pass
     bucket = ds.create_bucket(bucket_id, "testingtype", "test-client", "testing-box")
     yield bucket
     ds.delete_bucket(bucket_id)

@@ -37,7 +37,15 @@ def try_compile_title_regex(title):
         return re.compile(title, re.IGNORECASE)
     except re.error:
         logger.error(f"Invalid regex pattern: {title}")
-        exit(1)
+        raise SystemExit(1)
+
+
+def _safe_logger_exception(message: str) -> bool:
+    try:
+        logger.exception(message)
+    except OSError:
+        return False
+    return True
 
 
 def main():
@@ -126,22 +134,19 @@ def heartbeat_loop(
             logger.debug(current_window)
         except (FatalError, OSError):
             # Fatal exceptions should quit the program
-            try:
-                logger.exception("Fatal error, stopping")
-            except OSError:
-                pass
+            _safe_logger_exception("Fatal error, stopping")
             break
         except Exception:
             # Non-fatal exceptions should be logged
-            try:
-                # If stdout has been closed, this exception-print can cause (I think)
-                #   OSError: [Errno 5] Input/output error
-                # See: https://github.com/ActivityWatch/activitywatch/issues/756#issue-1296352264
-                #
-                # However, I'm unable to reproduce the OSError in a test (where I close stdout before logging),
-                # so I'm in uncharted waters here... but this solution should work.
-                logger.exception("Exception thrown while trying to get active window")
-            except OSError:
+            # If stdout has been closed, this exception-print can cause (I think)
+            #   OSError: [Errno 5] Input/output error
+            # See: https://github.com/ActivityWatch/activitywatch/issues/756#issue-1296352264
+            #
+            # However, I'm unable to reproduce the OSError in a test (where I close stdout before logging),
+            # so I'm in uncharted waters here... but this solution should work.
+            if not _safe_logger_exception(
+                "Exception thrown while trying to get active window"
+            ):
                 break
 
         if current_window is None:

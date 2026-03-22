@@ -64,14 +64,11 @@ def get_xprop_field(fieldname, xprop_output):
 
 
 def get_xprop_field_str(fieldname, xprop_output) -> str:
-    field = None
-    try:
-        field = get_xprop_field(fieldname, xprop_output)[0].strip('"')
-    except IndexError:
-        pass
-    if not field:
-        field = "unknown"
-    return field
+    fields = get_xprop_field(fieldname, xprop_output)
+    if not fields:
+        return "unknown"
+    field = fields[0].strip('"')
+    return field or "unknown"
 
 
 def get_xprop_field_strlist(fieldname, xprop_output) -> List[str]:
@@ -79,25 +76,19 @@ def get_xprop_field_strlist(fieldname, xprop_output) -> List[str]:
 
 
 def get_xprop_field_int(fieldname, xprop_output) -> int:
-    field = None
-    try:
-        field = int(get_xprop_field(fieldname, xprop_output)[0])
-    except IndexError:
-        pass
-    if not field:
-        field = -1
-    return field
+    fields = get_xprop_field(fieldname, xprop_output)
+    if not fields:
+        return -1
+    field = int(fields[0])
+    return field if field else -1
 
 
 def get_xprop_field_class(xprop_output) -> List[str]:
-    classname: List[str] = []
-    try:
-        classname = [c.strip('", ') for c in get_xprop_field("WM_CLASS", xprop_output)[0].split(',')]
-    except IndexError:
-        pass
-    if not classname:
-        classname = ["unknown"]
-    return classname
+    fields = get_xprop_field("WM_CLASS", xprop_output)
+    if not fields:
+        return ["unknown"]
+    classname = [c.strip('", ') for c in fields[0].split(",")]
+    return classname or ["unknown"]
 
 
 def get_window(wid, active_window=False):

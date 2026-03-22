@@ -5,6 +5,7 @@ import subprocess
 import platform
 import signal
 import threading
+from contextlib import suppress
 from typing import Optional
 from time import sleep
 
@@ -62,10 +63,8 @@ def main(
         # Running setpgrp when the python process is a session leader fails,
         # such as in a systemd service. See:
         # https://stackoverflow.com/a/51005084/1014208
-        try:
+        with suppress(PermissionError):
             os.setpgrp()
-        except PermissionError:
-            pass
 
     config = AwQtSettings(testing=testing)
     _autostart_modules = (
@@ -90,10 +89,8 @@ def main(
         # wait for signal to quit
         if sys.platform == "win32":
             # Windows doesn't support signals, so we just sleep until interrupted
-            try:
+            with suppress(KeyboardInterrupt):
                 sleep(threading.TIMEOUT_MAX)
-            except KeyboardInterrupt:
-                pass
         else:
             signal.pause()
 
