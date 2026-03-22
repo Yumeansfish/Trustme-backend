@@ -3,9 +3,8 @@ import os
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional
 
-import aw_datastore
 import flask.json.provider
-from aw_datastore import Datastore
+from aw_datastore import Datastore, get_storage_methods
 from flask import (
     Blueprint,
     Flask,
@@ -58,7 +57,7 @@ class AWFlask(Flask):
 
         # Initialize datastore and API
         if storage_method is None:
-            storage_method = aw_datastore.get_storage_methods()["memory"]
+            storage_method = get_storage_methods()["memory"]
         db = Datastore(storage_method, testing=testing)
         self.api = ServerAPI(db=db, testing=testing)
 

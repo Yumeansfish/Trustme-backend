@@ -43,7 +43,7 @@ def get_tag_exact():
             "no tag exactly matches" in p.stderr
             or "No names found, cannot describe anything" in p.stderr
         ):
-            pass
+            return None
         else:
             raise Exception(p.stderr)
     else:
@@ -56,11 +56,11 @@ def get_tag_latest():
             ["git", "describe", "--abbrev=0", "--tags"], encoding="utf8", cwd=workdir
         ).strip()
         if not tag:
-            return
+            return None
         basever = tag
     except subprocess.CalledProcessError as e:
         print(e)
-        return
+        return None
 
     try:
         return f"{basever}.dev+{get_rev()}"
