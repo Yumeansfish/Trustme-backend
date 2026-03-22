@@ -642,14 +642,6 @@ fn query_server(
     let bid_window = format!("aw-watcher-window_{}", hostname);
     let bid_afk = format!("aw-watcher-afk_{}", hostname);
 
-    let always_active_pattern = match client.get_setting("always_active_pattern") {
-        Ok(v) => v.as_str().map(|s| s.to_string()),
-        Err(e) => {
-            log::warn!("Failed to fetch always_active_pattern: {}", e);
-            None
-        }
-    };
-
     let base_params = QueryParamsBase {
         bid_browsers: vec![],
         classes: get_server_classes(),
@@ -662,7 +654,6 @@ fn query_server(
         base: base_params,
         bid_window,
         bid_afk,
-        always_active_pattern,
     };
     let query_params = QueryParams::Desktop(desktop_params);
 
