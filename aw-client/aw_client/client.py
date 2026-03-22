@@ -37,7 +37,7 @@ def _log_request_exception(e: req.RequestException):
         d = e.response.json() if e.response else None
         logger.warning(f"Error message received: {d}")
     except json.JSONDecodeError:
-        pass
+        return None
 
 
 def _dt_is_tzaware(dt: datetime) -> bool:

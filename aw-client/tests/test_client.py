@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+from contextlib import suppress
 import time
 from random import random
 from datetime import datetime, timedelta, timezone
@@ -33,10 +34,8 @@ def test_full():
         assert client.client_name == client_name
 
         # Delete bucket before creating it, and handle error if it doesn't already exist
-        try:
+        with suppress(HTTPError):
             client.delete_bucket(bucket_name)
-        except HTTPError:
-            pass
 
         # Create bucket
         client.create_bucket(bucket_name, bucket_etype)

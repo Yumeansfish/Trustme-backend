@@ -29,7 +29,7 @@ def temporary_bucket(ds):
     bucket_id = "test_bucket"
     try:
         ds.delete_bucket(bucket_id)
-    except Exception:
+    except ValueError:
         pass
     bucket = ds.create_bucket(bucket_id, "testingtype", "test-client", "testing-box")
     yield bucket
