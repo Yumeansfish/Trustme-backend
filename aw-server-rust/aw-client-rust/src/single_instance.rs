@@ -1,6 +1,8 @@
 use dirs::cache_dir;
 use fs4::fs_std::FileExt;
-use log::{debug, error};
+use log::debug;
+#[cfg(windows)]
+use log::error;
 use std::fs::{File, OpenOptions};
 use std::io;
 use std::path::{Path, PathBuf};
