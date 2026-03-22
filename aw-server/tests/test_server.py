@@ -5,7 +5,6 @@ import pytest
 from aw_core.models import Event
 from aw_server.dashboard_summary_store import SummarySnapshotStore
 from aw_server.summary_snapshot import build_summary_snapshot
-from aw_server.server import AWFlask
 
 
 @pytest.fixture()

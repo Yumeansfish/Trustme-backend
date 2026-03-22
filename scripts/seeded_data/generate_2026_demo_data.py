@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import math
 import random
 import urllib.parse
 import urllib.request
@@ -583,7 +582,6 @@ def build_demo_events(config: SeedConfig) -> Dict[str, List[dict]]:
         day_last_event: datetime | None = None
 
         for project, project_minutes in session_order:
-            session_start = cursor
             remaining_minutes = project_minutes
             while remaining_minutes > 0:
                 chunk_minutes = min(

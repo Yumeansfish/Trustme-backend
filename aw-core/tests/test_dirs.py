@@ -34,11 +34,10 @@ def test_prefer_runtime_root_keeps_trust_me_when_both_exist(tmp_path):
 
 
 def test_get_config_dir_uses_legacy_root_when_present(tmp_path, monkeypatch):
-    trust_me = tmp_path / "trust-me"
     legacy = tmp_path / "activitywatch"
     legacy.mkdir()
 
-    monkeypatch.setattr(platformdirs := dirs.platformdirs, "user_config_dir", lambda app: str(tmp_path / app))
+    monkeypatch.setattr(dirs.platformdirs, "user_config_dir", lambda app: str(tmp_path / app))
 
     path = Path(dirs.get_config_dir("aw-core-test"))
 
@@ -49,7 +48,7 @@ def test_get_config_dir_uses_legacy_root_when_present(tmp_path, monkeypatch):
 def test_get_log_dir_uses_trust_me_root_for_fresh_installs(tmp_path, monkeypatch):
     monkeypatch.setattr(dirs.sys, "platform", "linux")
     monkeypatch.setattr(
-        platformdirs := dirs.platformdirs,
+        dirs.platformdirs,
         "user_cache_path",
         lambda app: tmp_path / app,
     )
