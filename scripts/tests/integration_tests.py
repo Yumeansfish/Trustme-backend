@@ -65,11 +65,6 @@ def server_process():
             if s in stderr:
                 pytest.fail(f"Found ERROR indicator in stderr from server: {s}")
 
-    # NOTE: returncode was -9 for whatever reason
-    # if server_proc.returncode != 0:
-    #     pytest.fail("Exit code was non-zero ({})".format(server_proc.returncode))
-
-
 # TODO: Use the fixture in the tests instead of this thing here
 def test_integration(server_process):
     # This is just here so that the server_process fixture is initialized
