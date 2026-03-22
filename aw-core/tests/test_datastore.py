@@ -95,7 +95,7 @@ def test_nonexistent_bucket(datastore):
     Tests that a KeyError is raised if you request a non-existent bucket
     """
     with pytest.raises(KeyError):
-        datastore["I-do-not-exist"]
+        _ = datastore["I-do-not-exist"]
 
 
 @pytest.mark.parametrize("bucket_cm", param_testing_buckets_cm())

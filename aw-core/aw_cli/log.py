@@ -39,9 +39,9 @@ def print_log(
     print(f"  (Filtered {lines_printed}/{len(lines)} lines)")
 
 
-def find_oldest_log(path: Path, testing=False) -> Path:
+def find_oldest_log(path: Path, testing=False) -> Optional[Path]:
     if not path.is_dir():
-        return
+        return None
 
     logfiles = [
         f
@@ -51,7 +51,7 @@ def find_oldest_log(path: Path, testing=False) -> Path:
         and ("testing" in f.name if testing else "testing" not in f.name)
     ]
     if not logfiles:
-        return
+        return None
 
     logfiles.sort(key=lambda f: f.stat().st_mtime)
     logfile = logfiles[-1]

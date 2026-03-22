@@ -58,10 +58,6 @@ def server_process():
 
     with open(logfile_stderr.name, "r+b") as f:
         stderr = str(f.read(), "utf8")
-        # For some reason, this fails aw-server-rust, but not aw-server-python
-        # if not stderr:
-        #    pytest.fail("No output to stderr from server")
-
         # Will show in case pytest fails
         print(stderr)
 
@@ -78,7 +74,3 @@ def server_process():
 def test_integration(server_process):
     # This is just here so that the server_process fixture is initialized
     pass
-
-    # exit_code = pytest.main(["./aw-server/tests", "-v"])
-    # if exit_code != 0:
-    #     pytest.fail("Tests exited with non-zero code: " + str(exit_code))
