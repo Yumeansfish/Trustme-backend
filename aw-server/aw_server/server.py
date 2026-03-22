@@ -1,7 +1,7 @@
 import logging
 import os
 from datetime import datetime, timedelta
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 import aw_datastore
 import flask.json.provider
@@ -34,8 +34,8 @@ class AWFlask(Flask):
         host: str,
         testing: bool,
         storage_method=None,
-        cors_origins=[],
-        custom_static=dict(),
+        cors_origins: Optional[List[str]] = None,
+        custom_static: Optional[Dict[str, str]] = None,
         static_folder=static_folder,
         static_url_path="",
     ):
@@ -52,8 +52,9 @@ class AWFlask(Flask):
             static_url_path=static_url_path,
         )
         self.config["HOST"] = host  # needed for host-header check
+        resolved_cors_origins = list(cors_origins or [])
         with self.app_context():
-            _config_cors(cors_origins, testing)
+            _config_cors(resolved_cors_origins, testing)
 
         # Initialize datastore and API
         if storage_method is None:
@@ -63,7 +64,7 @@ class AWFlask(Flask):
 
         self.register_blueprint(root)
         self.register_blueprint(rest.blueprint)
-        self.register_blueprint(get_custom_static_blueprint(custom_static))
+        self.register_blueprint(get_custom_static_blueprint(custom_static or {}))
 
 
 class CustomJSONProvider(flask.json.provider.DefaultJSONProvider):
@@ -120,8 +121,8 @@ def _start(
     host: str,
     port: int,
     testing: bool = False,
-    cors_origins: List[str] = [],
-    custom_static: Dict[str, str] = dict(),
+    cors_origins: Optional[List[str]] = None,
+    custom_static: Optional[Dict[str, str]] = None,
 ):
     app = AWFlask(
         host,
