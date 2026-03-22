@@ -249,33 +249,14 @@ def _normalize_device_mappings(value: Any, *, default: Dict[str, List[str]], str
 
     normalized: Dict[str, List[str]] = {}
     for raw_group, raw_hosts in value.items():
-        if not isinstance(raw_group, str):
-            if strict:
-                raise ValueError("Device group names must be strings")
-            continue
-        group_name = raw_group.strip()
+        group_name = _normalize_device_group_name(raw_group, strict=strict)
         if not group_name:
-            if strict:
-                raise ValueError("Device group names cannot be empty")
             continue
-        if not isinstance(raw_hosts, list):
-            if strict:
-                raise ValueError(f"Device group '{group_name}' must contain a host list")
-            continue
-
-        hosts: List[str] = []
-        seen = set()
-        for raw_host in raw_hosts:
-            if not isinstance(raw_host, str):
-                if strict:
-                    raise ValueError(f"Hostnames for '{group_name}' must be strings")
-                continue
-            host = raw_host.strip()
-            if not host or host in seen:
-                continue
-            hosts.append(host)
-            seen.add(host)
-        normalized[group_name] = hosts
+        normalized[group_name] = _normalize_device_group_hosts(
+            raw_hosts,
+            group_name=group_name,
+            strict=strict,
+        )
     return normalized
 
 
@@ -331,22 +312,87 @@ def _normalize_classes(value: Any, *, default: List[Dict[str, Any]], strict: boo
 
     normalized = []
     for index, raw_category in enumerate(value):
-        if not isinstance(raw_category, dict):
-            if strict:
-                raise ValueError(f"Category at index {index} must be an object")
-            continue
-        name = _normalize_category_name(raw_category.get("name"), strict=strict)
-        if not name:
-            if strict:
-                raise ValueError(f"Category at index {index} has an invalid name")
-            continue
-        rule = _normalize_category_rule(raw_category.get("rule"), strict=strict)
-        entry: Dict[str, Any] = {"name": name, "rule": rule}
-        data = _normalize_category_data(raw_category.get("data"))
-        if data:
-            entry["data"] = data
-        normalized.append(entry)
+        entry = _normalize_class_entry(raw_category, index=index, strict=strict)
+        if entry is not None:
+            normalized.append(entry)
     return normalized
+
+
+def _normalize_device_group_name(value: Any, *, strict: bool) -> str | None:
+    if not isinstance(value, str):
+        if strict:
+            raise ValueError("Device group names must be strings")
+        return None
+
+    group_name = value.strip()
+    if group_name:
+        return group_name
+    if strict:
+        raise ValueError("Device group names cannot be empty")
+    return None
+
+
+def _normalize_device_group_hosts(
+    value: Any,
+    *,
+    group_name: str,
+    strict: bool,
+) -> List[str]:
+    if not isinstance(value, list):
+        if strict:
+            raise ValueError(f"Device group '{group_name}' must contain a host list")
+        return []
+
+    hosts: List[str] = []
+    seen = set()
+    for raw_host in value:
+        host = _normalize_device_group_host(raw_host, group_name=group_name, strict=strict)
+        if not host or host in seen:
+            continue
+        hosts.append(host)
+        seen.add(host)
+    return hosts
+
+
+def _normalize_device_group_host(
+    value: Any,
+    *,
+    group_name: str,
+    strict: bool,
+) -> str | None:
+    if not isinstance(value, str):
+        if strict:
+            raise ValueError(f"Hostnames for '{group_name}' must be strings")
+        return None
+    host = value.strip()
+    return host or None
+
+
+def _normalize_class_entry(
+    value: Any,
+    *,
+    index: int,
+    strict: bool,
+) -> Dict[str, Any] | None:
+    if not isinstance(value, dict):
+        if strict:
+            raise ValueError(f"Category at index {index} must be an object")
+        return None
+
+    name = _normalize_category_name(value.get("name"), strict=strict)
+    if not name:
+        if strict:
+            raise ValueError(f"Category at index {index} has an invalid name")
+        return None
+
+    entry: Dict[str, Any] = {
+        "name": name,
+        "rule": _normalize_category_rule(value.get("rule"), strict=strict),
+    }
+    data = _normalize_category_data(value.get("data"))
+    if data:
+        entry["data"] = data
+    return entry
 
 
 SETTING_NORMALIZERS: Dict[str, Callable[[Any, Any, bool], Any]] = {
@@ -409,26 +455,11 @@ def normalize_setting_value(key: str, value: Any, *, strict: bool) -> Any:
 
 def normalize_settings_data(raw_data: Dict[str, Any] | None) -> Tuple[Dict[str, Any], bool]:
     source = deepcopy(raw_data or {})
-    changed = False
-
-    for alias, canonical in SETTINGS_KEY_ALIASES.items():
-        if alias in source:
-            if canonical not in source:
-                source[canonical] = source[alias]
-            del source[alias]
-            changed = True
+    changed = _apply_setting_aliases(source)
 
     normalized: Dict[str, Any] = {}
-    for key, default in DEFAULT_SETTINGS.items():
-        raw_value = source.pop(key, _MISSING)
-        if raw_value is _MISSING:
-            normalized[key] = deepcopy(default)
-            changed = True
-            continue
-        normalized_value = normalize_setting_value(key, raw_value, strict=False)
-        if normalized_value != raw_value:
-            changed = True
-        normalized[key] = normalized_value
+    normalized, normalized_changed = _normalize_known_settings(source)
+    changed = changed or normalized_changed
 
     schema_version = source.pop("_schema_version", None)
     if schema_version != SETTINGS_SCHEMA_VERSION:
@@ -439,3 +470,32 @@ def normalize_settings_data(raw_data: Dict[str, Any] | None) -> Tuple[Dict[str, 
         normalized[key] = deepcopy(value)
 
     return normalized, changed or normalized != (raw_data or {})
+
+
+def _apply_setting_aliases(source: Dict[str, Any]) -> bool:
+    changed = False
+    for alias, canonical in SETTINGS_KEY_ALIASES.items():
+        if alias not in source:
+            continue
+        if canonical not in source:
+            source[canonical] = source[alias]
+        del source[alias]
+        changed = True
+    return changed
+
+
+def _normalize_known_settings(source: Dict[str, Any]) -> Tuple[Dict[str, Any], bool]:
+    normalized: Dict[str, Any] = {}
+    changed = False
+    for key, default in DEFAULT_SETTINGS.items():
+        raw_value = source.pop(key, _MISSING)
+        if raw_value is _MISSING:
+            normalized[key] = deepcopy(default)
+            changed = True
+            continue
+
+        normalized_value = normalize_setting_value(key, raw_value, strict=False)
+        if normalized_value != raw_value:
+            changed = True
+        normalized[key] = normalized_value
+    return normalized, changed
