@@ -70,13 +70,10 @@ class CustomJSONProvider(flask.json.provider.DefaultJSONProvider):
     # encoding/decoding of datetime as iso8601 strings
     # encoding of timedelta as second floats
     def default(self, obj, *args, **kwargs):
-        try:
-            if isinstance(obj, datetime):
-                return obj.isoformat()
-            if isinstance(obj, timedelta):
-                return obj.total_seconds()
-        except TypeError:
-            pass
+        if isinstance(obj, datetime):
+            return obj.isoformat()
+        if isinstance(obj, timedelta):
+            return obj.total_seconds()
         return super().default(obj)
 
 
