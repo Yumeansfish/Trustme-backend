@@ -13,8 +13,7 @@ import sys
 from datetime import datetime, time, timedelta
 from typing import Dict, List, Tuple
 
-import aw_client
-from aw_client import queries
+from aw_client import ActivityWatchClient, queries
 from aw_core import Event
 from aw_transform import flood
 from tabulate import tabulate
@@ -67,7 +66,7 @@ def query(regex: str, timeperiods, hostname: str):
         )
     ]
 
-    aw = aw_client.ActivityWatchClient(client_name="working_hours")
+    aw = ActivityWatchClient(client_name="working_hours")
 
     canonicalQuery = queries.canonicalEvents(
         queries.DesktopQueryParams(

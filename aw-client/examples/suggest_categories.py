@@ -6,16 +6,15 @@ This might make more sense as a notebook.
 
 from collections import Counter
 from datetime import datetime, timedelta, timezone
-from tabulate import tabulate
 from typing import Dict, List, Tuple, Any
 
+from aw_client import ActivityWatchClient, queries
 from aw_core import Event
-import aw_client
-from aw_client import queries
+from tabulate import tabulate
 
 
 # set up client
-awc = aw_client.ActivityWatchClient("test")
+awc = ActivityWatchClient("test")
 
 
 def example_categories():

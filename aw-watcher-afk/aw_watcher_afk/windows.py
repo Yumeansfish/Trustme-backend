@@ -1,6 +1,6 @@
 import ctypes
 import time
-from ctypes import POINTER, WINFUNCTYPE, Structure  # type: ignore
+from ctypes import POINTER, Structure, WINFUNCTYPE  # type: ignore
 from ctypes.wintypes import BOOL, DWORD, UINT
 
 
